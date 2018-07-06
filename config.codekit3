@@ -9,6 +9,13 @@
 	],
 "creatorBuild": "26667",
 "files": {
+	"\/.gitattributes": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/.gitattributes",
+		"oF": 0
+		},
 	"\/app\/app-min.js": {
 		"ft": 64,
 		"ma": 0,
@@ -63,6 +70,37 @@
 		"sM": 0,
 		"sU": 0
 		},
+	"\/app\/fonts\/icomoon.eot": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/app\/fonts\/icomoon.eot",
+		"oF": 0
+		},
+	"\/app\/fonts\/icomoon.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/app\/fonts\/icomoon.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
+	"\/app\/fonts\/icomoon.ttf": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/app\/fonts\/icomoon.ttf",
+		"oF": 0
+		},
+	"\/app\/fonts\/icomoon.woff": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/app\/fonts\/icomoon.woff",
+		"oF": 0
+		},
 	"\/app\/icomoon-min.css": {
 		"aP": 1,
 		"bl": 0,
@@ -91,6 +129,13 @@
 		"oAP": "\/index.html",
 		"oF": 2,
 		"oS": 0
+		},
+	"\/CNAME": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/CNAME",
+		"oF": 0
 		},
 	"\/index.html": {
 		"cB": 0,
