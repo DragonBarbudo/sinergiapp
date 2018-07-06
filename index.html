@@ -153,14 +153,19 @@
               <v-flex xs12="xs12">
                 <v-card class="elevation-10">
                   <v-card-text>
+                    <div id="visualizer">
+                      <p>{{visualizer}}</p>
+                      <hr/>
+                    </div>
                     <svg :view-box.camel="viewboxSize" id="svg">
-                      <template v-for="nX in objectsInX">
-                        <template v-for="nY in objectsInY">
-                          <g v-bind:transform="'translate('+(nX-1)*canvas.widthCut+','+(nY-1)*canvas.heightCut+')'">
-                            <rect v-bind:width="canvas.widthCut" v-bind:height="canvas.heightCut" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa"></rect>
-                          </g>
-                        </template>
-                      </template>
+                      <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">
+                        <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa"></rect>
+                      </g>
+                      <!--template(v-for="nX in objectsInX")
+                      template(v-for="nY in objectsInY")
+                        g(v-bind:transform="'translate('+(nX-1)*canvas.widthCut+','+(nY-1)*canvas.heightCut+')'")
+                          rect(v-bind:width="canvas.widthCut" v-bind:height="canvas.heightCut" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa")
+                      -->
                     </svg>
                     <v-alert type="error" :value="true" outline="outline">El visualizador esta descompuesto</v-alert>
                   </v-card-text>

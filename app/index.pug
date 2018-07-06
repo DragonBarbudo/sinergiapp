@@ -119,9 +119,14 @@ html(lang="es")
               v-flex(xs12)
                 v-card.elevation-10
                   v-card-text
-                    
+                    #visualizer
+                      p {{visualizer}}
+                      hr
+                      
                     svg(:view-box.camel="viewboxSize")#svg
-                        template(v-for="nX in objectsInX")
+                        g(v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'")
+                          rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa")
+                        //template(v-for="nX in objectsInX")
                           template(v-for="nY in objectsInY")
                             g(v-bind:transform="'translate('+(nX-1)*canvas.widthCut+','+(nY-1)*canvas.heightCut+')'")
                               rect(v-bind:width="canvas.widthCut" v-bind:height="canvas.heightCut" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa")

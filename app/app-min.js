@@ -48,6 +48,7 @@ new Vue({
   data: () => ({
     dialog: false,
     graphics : [],
+    blocks: [],
     material: {
       w: 400,
       h: 300,
@@ -73,15 +74,7 @@ new Vue({
     piezas: [
       {w:50, h:50, q:1 }
     ],
-    canvas: {
-      viewbox: "0,0,400,300",
-      width: 400,
-      height: 300,
-      widthCut: 40,
-      heightCut: 60,
-      objX:0,
-      objY:0
-    },
+    graficos:[]
 
   }),
   methods: {
@@ -104,10 +97,10 @@ new Vue({
     }
   },
   computed : {
-
    viewboxSize: function(){
      return "0,"+"0,"+this.material.w+","+this.material.h;
    },
+/*
    objectsInX : function(){
      var nvalue = Math.floor(this.canvas.width / this.canvas.widthCut);
      this.canvas.objX = nvalue;
@@ -120,7 +113,40 @@ new Vue({
    },
    objectsTotal : function(){
      return this.canvas.objX * this.canvas.objY;
+   },
+*/
+
+   visualizer : function(){
+     this.blocks = [];
+     this.graficos = [];
+
+
+     for(var p = 0; p<this.piezas.length; p++){
+       for(var pi = 0; pi<this.piezas[p].q; pi++){
+         console.log({ w: this.piezas[p].w, h:this.piezas[p].h });
+         this.blocks.push( { w: this.piezas[p].w*1, h:this.piezas[p].h*1 } );
+       }
+     }
+
+
+
+      this.graficos = [];
+      var packer = new Packer(this.material.w, this.material.h);
+
+      this.blocks = this.blocks.sort(function(a,b) { return (b.w*b.h < a.w*a.h ); });
+      packer.fit(this.blocks);
+
+      for(var n = 0; n<this.blocks.length; n++){
+        var block = this.blocks[n];
+        if(block.fit){
+          this.graficos.push( { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h } );
+
+        }
+      }
+
    }
+
+
   },
   watch: {
     material: {
