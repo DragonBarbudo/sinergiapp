@@ -1,3 +1,6 @@
+
+
+
 Packer = function(w, h) {
   this.init(w, h);
 };
@@ -45,6 +48,7 @@ Packer.prototype = {
 
 new Vue({
   el: '#app',
+  components: { Swatches },
   data: () => ({
     dialog: false,
     graphics : [],

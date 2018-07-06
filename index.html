@@ -8,10 +8,16 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>
     <link rel="stylesheet" href="//unpkg.com/vuetify/dist/vuetify.min.css"/>
     <link rel="stylesheet" href="app/icomoon.css"/>
+    <link rel="stylesheet" href="//unpkg.com/vue-swatches/dist/vue-swatches.min.css"/>
     <link rel="stylesheet" href="app/app.css"/>
   </head>
   <body>
     <div id="app">
+      <template>
+        <div>
+          <swatches></swatches>
+        </div>
+      </template>
       <v-app id="inspire">
         <v-toolbar class="red darken-4 pa-3" dark="dark">
           <v-toolbar-title>SINERGIAPP</v-toolbar-title>
@@ -56,9 +62,46 @@
                   </v-card>
                   <v-card class="mt-2">
                     <v-toolbar card="card">
+                      <v-toolbar-title>Piezas</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                      <v-btn color="red" dark="dark" outline="outline" small="small" v-on:click="addGraphic">Agregar</v-btn>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-expansion-panel popout="popout" v-model="graphics" expand="expand">
+                        <v-expansion-panel-content v-for="(p, index) in piezas" :key="index" ripple="ripple">
+                          <div slot="header">
+                            <v-icon small="small">photo_size_select_actual</v-icon><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong>
+                          </div>
+                          <v-card>
+                            <v-card-text>
+                              <v-layout>
+                                <v-flex>
+                                  <v-text-field v-model="p.w" box="box" type="number" label="Ancho (cm)" outline="outline" min="1"></v-text-field>
+                                </v-flex>
+                                <v-flex>
+                                  <v-text-field v-model="p.h" box="box" type="number" label="Alto (cm)" outline="outline" min="1"></v-text-field>
+                                </v-flex>
+                                <v-flex>
+                                  <v-text-field v-model="p.q" box="box" type="number" label="Cantidad" outline="outline" min="1">                             </v-text-field>
+                                </v-flex>
+                              </v-layout>
+                              <v-layout>
+                                <swatches v-model="p.c" popover-to="left"></swatches>
+                                <v-spacer></v-spacer>
+                                <v-btn color="red" outline="outline" v-if="index != 0" small="small" v-on:click="deleteGraphic(index)">Eliminar</v-btn>
+                              </v-layout>
+                            </v-card-text>
+                          </v-card>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-card-text>
+                  </v-card>
+                  <v-card class="mt-2">
+                    <v-toolbar card="card">
                       <v-toolbar-title>Acabados para {{material.tipo}}s</v-toolbar-title>
                       <v-spacer></v-spacer>
                     </v-toolbar>
+                    <v-alert type="error" :value="true" outline="outline">Zona de acabados en construcción                     </v-alert>
                     <v-card-text v-if="material.tipo == 'rigido'">
                       <v-checkbox :label="'Margen para corte'" v-model="material.margen" color="red"></v-checkbox>
                       <v-radio-group label="Medianil" v-model="material.medianil" mandatory="mandatory">
@@ -104,41 +147,6 @@
                       </div>
                     </v-card-text>
                   </v-card>
-                  <v-card class="mt-2">
-                    <v-toolbar card="card">
-                      <v-toolbar-title>Piezas</v-toolbar-title>
-                      <v-spacer></v-spacer>
-                      <v-btn color="red" dark="dark" outline="outline" small="small" v-on:click="addGraphic">Agregar</v-btn>
-                    </v-toolbar>
-                    <v-card-text>
-                      <v-expansion-panel popout="popout" v-model="graphics" expand="expand">
-                        <v-expansion-panel-content v-for="(p, index) in piezas" :key="index" ripple="ripple">
-                          <div slot="header">
-                            <v-icon small="small" color="red darken-4">photo_size_select_actual</v-icon><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong>
-                          </div>
-                          <v-card>
-                            <v-card-text>
-                              <v-layout>
-                                <v-flex>
-                                  <v-text-field v-model="p.w" box="box" type="number" label="Ancho (cm)" outline="outline" min="1"></v-text-field>
-                                </v-flex>
-                                <v-flex>
-                                  <v-text-field v-model="p.h" box="box" type="number" label="Alto (cm)" outline="outline" min="1"></v-text-field>
-                                </v-flex>
-                                <v-flex>
-                                  <v-text-field v-model="p.q" box="box" type="number" label="Cantidad" outline="outline" min="1"></v-text-field>
-                                </v-flex>
-                              </v-layout>
-                              <v-layout>
-                                <v-spacer></v-spacer>
-                                <v-btn color="red" outline="outline" v-if="index != 0" small="small" v-on:click="deleteGraphic(index)">Eliminar</v-btn>
-                              </v-layout>
-                            </v-card-text>
-                          </v-card>
-                        </v-expansion-panel-content>
-                      </v-expansion-panel>
-                    </v-card-text>
-                  </v-card>
                   <!--p.subtitle X: {{objectsInX}} | Y: {{objectsInY}}-->
                   <!--p.subtitle Total: {{objectsTotal}}-->
                   <v-dialog v-model="dialog">
@@ -161,8 +169,8 @@
                       <div class="mat_w caption">{{material.w}} cm</div>
                       <div class="mat_h caption">{{material.h}} cm</div>
                       <svg class="elevation-4" :view-box.camel="viewboxSize" id="svg">
-                        <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">
-                          <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa"></rect>
+                        <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">{{g}}
+                          <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c"></rect>
                         </g>
                       </svg>
                     </div>
@@ -181,6 +189,7 @@
     <script src="//unpkg.com/vue/dist/vue.js"></script>
     <!--script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")-->
     <script src="//unpkg.com/vuetify/dist/vuetify.min.js"></script>
+    <script src="//unpkg.com/vue-swatches@1.0.1/dist/vue-swatches.min.js"></script>
     <script src="//cdn.rawgit.com/yWorks/jsPDF/ee8bcea8/dist/jspdf.min.js"></script>
     <script src="//cdn.rawgit.com/yWorks/svg2pdf.js/master/dist/svg2pdf.min.js"></script>
     <!--script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js")-->

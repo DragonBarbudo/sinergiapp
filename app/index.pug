@@ -8,10 +8,15 @@ html(lang="es")
     link(rel="stylesheet", href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons")
     link(rel="stylesheet", href="//unpkg.com/vuetify/dist/vuetify.min.css")
     link(rel="stylesheet", href="app/icomoon.css")
+    link(rel="stylesheet", href="//unpkg.com/vue-swatches/dist/vue-swatches.min.css")
     link(rel="stylesheet", href="app/app.css")
   body
-
+  
+  
+  
     div#app
+      template: div: swatches
+
       v-app#inspire()
         v-toolbar(dark).red.darken-4.pa-3
           v-toolbar-title SINERGIAPP
@@ -45,16 +50,47 @@ html(lang="es")
                       v-flex: v-text-field(v-model="material.w" label="Ancho (cm)" required type="number" :append-icon="'swap_horiz'" outline :disabled="material.tipo == 'rigido'")
                       v-flex: v-text-field(v-model="material.h" label="Alto (cm)" required type="number" :append-icon="'swap_vert'" outline :disabled="material.tipo == 'rigido'")
                     
+                
+                  
+                        
+                  
+                v-card.mt-2
+                  v-toolbar(card)
+                    v-toolbar-title Piezas
+                    v-spacer
+                    v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar
+                
+                  v-card-text
+                    v-expansion-panel(popout v-model="graphics" expand)
+                      v-expansion-panel-content(v-for="(p, index) in piezas" :key="index" ripple)
+                        div(slot="header")
+                          v-icon(small) photo_size_select_actual
+                          strong  {{p.w}}x{{p.h}} cms [{{p.q}} piezas]
+                        v-card
+                          
+                          v-card-text
+                            v-layout
+                              v-flex: v-text-field(v-model="p.w" box type="number" label="Ancho (cm)" outline min="1")
+                              v-flex: v-text-field(v-model="p.h" box type="number" label="Alto (cm)" outline min="1")
+                              v-flex: v-text-field(v-model="p.q" box type="number" label="Cantidad" outline min="1")                              
+                            v-layout
+                              swatches(v-model="p.c" popover-to="left")
+                              v-spacer
+                              v-btn(color="red" outline v-if="index != 0" small v-on:click="deleteGraphic(index)") Eliminar
+              
+
                 v-card.mt-2
                   v-toolbar(card)
                     v-toolbar-title Acabados para {{material.tipo}}s
                     v-spacer
+      
+                  v-alert(type="error" :value="true" outline) Zona de acabados en construcción                     
+                    
                   v-card-text(v-if="material.tipo == 'rigido'")
                     v-checkbox(:label="'Margen para corte'" v-model="material.margen" color="red" )
                     v-radio-group(label="Medianil" v-model="material.medianil" mandatory)
                       v-layout
                         v-radio(v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red"  :key="m.name")
-                      
                       
                     
                   v-card-text(v-if="material.tipo == 'flexible'")
@@ -73,34 +109,6 @@ html(lang="es")
                           v-flex: v-text-field(v-model="material.rebases.t" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" outline)
                           v-flex: v-text-field(v-model="material.rebases.t" label="Derecho (cm)" type="number" :append-icon="'border_right'" outline)
                           
-                        
-                        
-                  
-                v-card.mt-2
-                  v-toolbar(card)
-                    v-toolbar-title Piezas
-                    v-spacer
-                    v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar
-                
-                  v-card-text
-                    v-expansion-panel(popout v-model="graphics" expand)
-                      v-expansion-panel-content(v-for="(p, index) in piezas" :key="index" ripple)
-                        div(slot="header")
-                          v-icon(small color="red darken-4") photo_size_select_actual
-                          strong  {{p.w}}x{{p.h}} cms [{{p.q}} piezas]
-                        v-card
-                          
-                          v-card-text
-                            v-layout
-                              v-flex: v-text-field(v-model="p.w" box type="number" label="Ancho (cm)" outline min="1")
-                              v-flex: v-text-field(v-model="p.h" box type="number" label="Alto (cm)" outline min="1")
-                              v-flex: v-text-field(v-model="p.q" box type="number" label="Cantidad" outline min="1")
-                            v-layout
-                              v-spacer
-                              v-btn(color="red" outline v-if="index != 0" small v-on:click="deleteGraphic(index)") Eliminar
-              
-
-
                       
                       
                 //p.subtitle X: {{objectsInX}} | Y: {{objectsInY}}
@@ -129,7 +137,8 @@ html(lang="es")
                       svg(:view-box.camel="viewboxSize")#svg.elevation-4
                         
                         g(v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'" )
-                          rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa")
+                          | {{g}}
+                          rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c")
                       
                       
                       
@@ -140,8 +149,10 @@ html(lang="es")
     script(src="//unpkg.com/vue/dist/vue.js")
     //script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
     script(src="//unpkg.com/vuetify/dist/vuetify.min.js")
+    script(src="//unpkg.com/vue-swatches@1.0.1/dist/vue-swatches.min.js")
     script(src="//cdn.rawgit.com/yWorks/jsPDF/ee8bcea8/dist/jspdf.min.js")
     script(src="//cdn.rawgit.com/yWorks/svg2pdf.js/master/dist/svg2pdf.min.js")
+    
     //script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js")
     script(src="app/app.js")
             

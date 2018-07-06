@@ -20,7 +20,7 @@
 		"ft": 64,
 		"ma": 0,
 		"mi": 0,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/app\/app-min-min.js",
 		"oF": 0,
 		"sC": 0,
@@ -47,7 +47,7 @@
 		"ft": 64,
 		"ma": 0,
 		"mi": 0,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/app\/app-min.js",
 		"oF": 0,
 		"sC": 0,
@@ -1961,7 +1961,7 @@
 		"quality": 100
 		},
 	"languageDefaultsJS": {
-		"autoOutputAction": 0,
+		"autoOutputAction": 1,
 		"autoOutputPathFilenamePattern": "*-min.js",
 		"autoOutputPathRelativePath": "\/min",
 		"autoOutputPathReplace1": "",

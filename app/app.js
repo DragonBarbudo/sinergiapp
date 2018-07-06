@@ -1,3 +1,5 @@
+
+
 Packer = function(w, h) {
   this.init(w, h);
 };
@@ -42,9 +44,9 @@ Packer.prototype = {
 
 
 
-
 new Vue({
   el: '#app',
+  components: {Swatches: window.VueSwatches.default},
   data: () => ({
     dialog: false,
     graphics : [],
@@ -72,7 +74,7 @@ new Vue({
       ]
     },
     piezas: [
-      {w:50, h:50, q:1 }
+      {w:50, h:50, q:1, c:"#000"}
     ],
     graficos:[]
 
@@ -89,7 +91,7 @@ new Vue({
       pdf.save('sinergia.pdf');
     },
     addGraphic : function(){
-      this.piezas.push({w:10, h:10, q:1 });
+      this.piezas.push({w:10, h:10, q:1, c:"#000" });
     },
     deleteGraphic : function(index){
       this.piezas.splice(index, 1);
@@ -109,7 +111,7 @@ new Vue({
 
      for(var p = 0; p<this.piezas.length; p++){
        for(var pi = 0; pi<this.piezas[p].q; pi++){
-         this.blocks.push( { w: this.piezas[p].w*1, h:this.piezas[p].h*1 } );
+         this.blocks.push( { w: this.piezas[p].w*1, h:this.piezas[p].h*1, c: this.piezas[p].c, } );
        }
      }
 
@@ -124,7 +126,7 @@ new Vue({
       for(var n = 0; n<this.blocks.length; n++){
         var block = this.blocks[n];
         if(block.fit){
-          this.graficos.push( { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h } );
+          this.graficos.push( { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c } );
 
         }
       }
