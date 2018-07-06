@@ -20,8 +20,8 @@ html(lang="es")
             v-btn(v-on:click="downloadPDF" flat) Descargar PDF
         v-content
           v-container
-            v-layout
-              v-flex(xs6).mr-4: form
+            v-layout()
+              v-flex(xs12).mr-4: form
                 v-card.mb-2
                   v-toolbar(card)
                     v-toolbar-title Material
@@ -118,7 +118,7 @@ html(lang="es")
               
               
               
-              v-flex
+              v-flex(xs12)
                 v-card.elevation-10
                   v-card-text
                     
