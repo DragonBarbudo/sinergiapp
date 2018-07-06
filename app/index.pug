@@ -53,9 +53,7 @@ html(lang="es")
                     v-checkbox(:label="'Margen para corte'" v-model="material.margen" color="red" )
                     v-radio-group(label="Medianil" v-model="material.medianil" mandatory)
                       v-layout
-                        v-radio(label="0 mm"  value="0.0" color="red")
-                        v-radio(label="3 mm" value="0.3" color="red")
-                        v-radio(label="5 mm" value="0.5" color="red")
+                        v-radio(v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red"  :key="m")
                       
                       
                     

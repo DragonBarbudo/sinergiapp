@@ -58,6 +58,11 @@ new Vue({
       rebases: { t:0, r:0, b:0, l:0},
       margen: false,
       medianil: 0.0,
+      medianiles:[
+        {name: "0 mm", value:0.0},
+        {name:"3 mm", value:0.3},
+        {name:"5 mm", value:0.5}
+      ],
       medidas:[
         { id: 0, w:122, h:244 },
         { id: 1, w:120, h:180 },
@@ -121,7 +126,7 @@ new Vue({
     material: {
         handler(val){
           if(val.tipo == 'flexible'){
-            
+
           } else if(val.tipo == 'rigido'){
             this.material.w = this.material.medidas[this.material.rigidoElegido].w;
             this.material.h = this.material.medidas[this.material.rigidoElegido].h;
