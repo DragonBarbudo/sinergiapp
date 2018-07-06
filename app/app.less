@@ -1,5 +1,27 @@
-#svg{
-  outline: 1px dashed #aaa;
-  width: 100%;
-  max-height:600px;
+#svg-container{
+  position: relative;
+  .mat_w,.mat_h{
+    color:#fff;
+    position: absolute;
+  }
+  .mat_w{
+    left: 10px; top: -10px;
+  }
+  .mat_h{
+    left: -4px; top: 110px;
+    transform: rotate(-90deg);
+    transform-origin: left;
+    text-align: right;
+    min-width: 100px;
+
+  }
 }
+#svg{
+  width: 94%;
+  //max-height:600px;
+  margin:2%;
+  background: #fff;
+}
+
+
+#visualizer{display: none;}

@@ -39,7 +39,7 @@ html(lang="es")
                   
                     v-layout(v-if="material.tipo == 'rigido'" align-center justify-center).mb-2
                       v-btn-toggle(v-model="material.rigidoElegido" mandatory)
-                        v-btn(v-for="(te,index) in material.medidas" :key="index" :value="te.id" color="red" dark outline flat)
+                        v-btn(v-for="(te,index) in material.medidas" :key="te.id" :value="te.id" color="red" dark outline flat)
                           span {{te.w}} x {{te.h}}
                     v-layout
                       v-flex: v-text-field(v-model="material.w" label="Ancho (cm)" required type="number" :append-icon="'swap_horiz'" outline :disabled="material.tipo == 'rigido'")
@@ -53,7 +53,7 @@ html(lang="es")
                     v-checkbox(:label="'Margen para corte'" v-model="material.margen" color="red" )
                     v-radio-group(label="Medianil" v-model="material.medianil" mandatory)
                       v-layout
-                        v-radio(v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red"  :key="m")
+                        v-radio(v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red"  :key="m.name")
                       
                       
                     
@@ -117,21 +117,22 @@ html(lang="es")
               
               
               v-flex(xs12)
-                v-card.elevation-10
+                v-card.red.elevation-2
                   v-card-text
                     #visualizer
                       p {{visualizer}}
                       hr
                       
-                    svg(:view-box.camel="viewboxSize")#svg
-                        g(v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'")
+                    #svg-container
+                      .mat_w.caption {{material.w}} cm
+                      .mat_h.caption {{material.h}} cm
+                      svg(:view-box.camel="viewboxSize")#svg.elevation-4
+                        
+                        g(v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'" )
                           rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa")
-                        //template(v-for="nX in objectsInX")
-                          template(v-for="nY in objectsInY")
-                            g(v-bind:transform="'translate('+(nX-1)*canvas.widthCut+','+(nY-1)*canvas.heightCut+')'")
-                              rect(v-bind:width="canvas.widthCut" v-bind:height="canvas.heightCut" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa")
-                    v-alert(type="error" :value="true" outline) El visualizador esta descompuesto
-        
+                      
+                      
+                      
         v-footer(dark height="auto" tile).red.darken-4.pa-3
           v-spacer
           div Sinergia Publicitaria. {{ new Date().getFullYear() }}.

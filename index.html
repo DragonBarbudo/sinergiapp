@@ -41,7 +41,7 @@
                     <v-card-text>
                       <v-layout class="mb-2" v-if="material.tipo == 'rigido'" align-center="align-center" justify-center="justify-center">
                         <v-btn-toggle v-model="material.rigidoElegido" mandatory="mandatory">
-                          <v-btn v-for="(te,index) in material.medidas" :key="index" :value="te.id" color="red" dark="dark" outline="outline" flat="flat"><span>{{te.w}} x {{te.h}}</span></v-btn>
+                          <v-btn v-for="(te,index) in material.medidas" :key="te.id" :value="te.id" color="red" dark="dark" outline="outline" flat="flat"><span>{{te.w}} x {{te.h}}</span></v-btn>
                         </v-btn-toggle>
                       </v-layout>
                       <v-layout>
@@ -63,7 +63,7 @@
                       <v-checkbox :label="'Margen para corte'" v-model="material.margen" color="red"></v-checkbox>
                       <v-radio-group label="Medianil" v-model="material.medianil" mandatory="mandatory">
                         <v-layout>
-                          <v-radio v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red" :key="m"></v-radio>
+                          <v-radio v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red" :key="m.name"></v-radio>
                         </v-layout>
                       </v-radio-group>
                     </v-card-text>
@@ -151,23 +151,21 @@
                 </form>
               </v-flex>
               <v-flex xs12="xs12">
-                <v-card class="elevation-10">
+                <v-card class="red elevation-2">
                   <v-card-text>
                     <div id="visualizer">
                       <p>{{visualizer}}</p>
                       <hr/>
                     </div>
-                    <svg :view-box.camel="viewboxSize" id="svg">
-                      <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">
-                        <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa"></rect>
-                      </g>
-                      <!--template(v-for="nX in objectsInX")
-                      template(v-for="nY in objectsInY")
-                        g(v-bind:transform="'translate('+(nX-1)*canvas.widthCut+','+(nY-1)*canvas.heightCut+')'")
-                          rect(v-bind:width="canvas.widthCut" v-bind:height="canvas.heightCut" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa")
-                      -->
-                    </svg>
-                    <v-alert type="error" :value="true" outline="outline">El visualizador esta descompuesto</v-alert>
+                    <div id="svg-container">
+                      <div class="mat_w caption">{{material.w}} cm</div>
+                      <div class="mat_h caption">{{material.h}} cm</div>
+                      <svg class="elevation-4" :view-box.camel="viewboxSize" id="svg">
+                        <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">
+                          <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" stroke="#aaa"></rect>
+                        </g>
+                      </svg>
+                    </div>
                   </v-card-text>
                 </v-card>
               </v-flex>

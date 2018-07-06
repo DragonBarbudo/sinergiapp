@@ -80,7 +80,7 @@ new Vue({
   methods: {
     downloadPDF : function(){
       this.dialog=true;
-      var pdf = new jsPDF('l', 'cm', [this.canvas.width, this.canvas.height]);
+      var pdf = new jsPDF('l', 'cm', [this.material.w, this.material.h]);
       svg2pdf(document.getElementById('svg'), pdf, {
         xOffset: 0,
         yOffset: 0,
@@ -100,21 +100,7 @@ new Vue({
    viewboxSize: function(){
      return "0,"+"0,"+this.material.w+","+this.material.h;
    },
-/*
-   objectsInX : function(){
-     var nvalue = Math.floor(this.canvas.width / this.canvas.widthCut);
-     this.canvas.objX = nvalue;
-     return nvalue;
-   },
-   objectsInY : function(){
-     var nvalue = Math.floor(this.canvas.height / this.canvas.heightCut);
-     this.canvas.objY = nvalue;
-     return nvalue;
-   },
-   objectsTotal : function(){
-     return this.canvas.objX * this.canvas.objY;
-   },
-*/
+
 
    visualizer : function(){
      this.blocks = [];
@@ -123,7 +109,6 @@ new Vue({
 
      for(var p = 0; p<this.piezas.length; p++){
        for(var pi = 0; pi<this.piezas[p].q; pi++){
-         console.log({ w: this.piezas[p].w, h:this.piezas[p].h });
          this.blocks.push( { w: this.piezas[p].w*1, h:this.piezas[p].h*1 } );
        }
      }
