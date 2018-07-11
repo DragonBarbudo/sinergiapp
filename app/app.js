@@ -52,8 +52,8 @@ new Vue({
     graphics : [],
     blocks: [],
     material: {
-      w: 400,
-      h: 300,
+      w: 122,
+      h: 244,
       tipo: 'flexible',
       rigidoElegido : 0,
       rebase: false,
@@ -74,9 +74,10 @@ new Vue({
       ]
     },
     piezas: [
-      {w:50, h:50, q:1, c:"#000"}
+      {w:40, h:40, q:11, c:"#C0382B"}
     ],
-    graficos:[]
+    graficos:[],
+    paginas : [{}]
 
   }),
   methods: {
@@ -118,6 +119,7 @@ new Vue({
 
 
       this.graficos = [];
+
       var packer = new Packer(this.material.w, this.material.h);
 
       this.blocks = this.blocks.sort(function(a,b) { return (b.w*b.h < a.w*a.h ); });
@@ -125,9 +127,14 @@ new Vue({
 
       for(var n = 0; n<this.blocks.length; n++){
         var block = this.blocks[n];
-        if(block.fit){
-          this.graficos.push( { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c } );
 
+        if(block.fit){
+          var theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
+          this.graficos.push( theGraphic );
+        }
+        else {
+          var theGraphic = { w:block.w, h:block.h, c:block.c };
+          console.log(theGraphic);
         }
       }
 

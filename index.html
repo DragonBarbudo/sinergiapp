@@ -13,11 +13,6 @@
   </head>
   <body>
     <div id="app">
-      <template>
-        <div>
-          <swatches></swatches>
-        </div>
-      </template>
       <v-app id="inspire">
         <v-toolbar class="red darken-4 pa-3" dark="dark">
           <v-toolbar-title>SINERGIAPP</v-toolbar-title>
@@ -69,9 +64,7 @@
                     <v-card-text>
                       <v-expansion-panel popout="popout" v-model="graphics" expand="expand">
                         <v-expansion-panel-content v-for="(p, index) in piezas" :key="index" ripple="ripple">
-                          <div slot="header">
-                            <v-icon small="small">photo_size_select_actual</v-icon><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong>
-                          </div>
+                          <div slot="header"><i class="v-icon material-icons" :style="'font-size: 16px; color:'+p.c">photo_size_select_actual</i><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong></div>
                           <v-card>
                             <v-card-text>
                               <v-layout>
@@ -86,7 +79,7 @@
                                 </v-flex>
                               </v-layout>
                               <v-layout>
-                                <swatches v-model="p.c" popover-to="left"></swatches>
+                                <swatches v-model="p.c" swatch-size="20" spacing-size="2" inline="inline"></swatches>
                                 <v-spacer></v-spacer>
                                 <v-btn color="red" outline="outline" v-if="index != 0" small="small" v-on:click="deleteGraphic(index)">Eliminar</v-btn>
                               </v-layout>
@@ -161,19 +154,21 @@
               <v-flex xs12="xs12">
                 <v-card class="red elevation-2">
                   <v-card-text>
-                    <div id="visualizer">
-                      <p>{{visualizer}}</p>
-                      <hr/>
-                    </div>
-                    <div id="svg-container">
-                      <div class="mat_w caption">{{material.w}} cm</div>
-                      <div class="mat_h caption">{{material.h}} cm</div>
-                      <svg class="elevation-4" :view-box.camel="viewboxSize" id="svg">
-                        <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">{{g}}
-                          <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c"></rect>
-                        </g>
-                      </svg>
-                    </div>
+                    <div id="visualizer">{{visualizer}}</div>
+                    <v-tabs dark="dark" slider-color="white" color="red darken-4">
+                      <v-tab v-for="(page, index) in paginas" :key="index" ripple="ripple">Página {{index+1}}</v-tab>
+                      <v-tab-item v-for="(page, index) in paginas" :key="index">     
+                        <div class="svg-container">
+                          <div class="mat_w caption">{{material.w}} cm</div>
+                          <div class="mat_h caption">{{material.h}} cm</div>
+                          <svg class="rendered elevation-4" :view-box.camel="viewboxSize" :id="'page-'+index">
+                            <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">{{g}}
+                              <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c"></rect>
+                            </g>
+                          </svg>
+                        </div>
+                      </v-tab-item>
+                    </v-tabs>
                   </v-card-text>
                 </v-card>
               </v-flex>

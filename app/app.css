@@ -1,26 +1,27 @@
-#svg-container {
+.svg-container {
+  margin-top: 30px;
   position: relative;
 }
-#svg-container .mat_w,
-#svg-container .mat_h {
+.svg-container .mat_w,
+.svg-container .mat_h {
   color: #fff;
   position: absolute;
 }
-#svg-container .mat_w {
-  left: 10px;
-  top: -10px;
+.svg-container .mat_w {
+  left: 30px;
+  top: 0px;
 }
-#svg-container .mat_h {
-  left: -4px;
-  top: 110px;
+.svg-container .mat_h {
+  left: 6px;
+  top: 120px;
   transform: rotate(-90deg);
   transform-origin: left;
   text-align: right;
   min-width: 100px;
 }
-#svg {
-  width: 94%;
-  margin: 2%;
+svg.rendered {
+  width: 90%;
+  margin: 5%;
   background: #fff;
 }
 #visualizer {
