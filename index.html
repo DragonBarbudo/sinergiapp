@@ -62,7 +62,7 @@
                       <v-btn color="red" dark="dark" outline="outline" small="small" v-on:click="addGraphic">Agregar</v-btn>
                     </v-toolbar>
                     <v-card-text>
-                      <v-expansion-panel popout="popout" v-model="graphics" expand="expand">
+                      <v-expansion-panel popout="popout" v-model="piezasExpansionPanel" expand="expand">
                         <v-expansion-panel-content v-for="(p, index) in piezas" :key="index" ripple="ripple">
                           <div slot="header"><i class="v-icon material-icons" :style="'font-size: 16px; color:'+p.c">photo_size_select_actual</i><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong></div>
                           <v-card>

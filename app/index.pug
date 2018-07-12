@@ -60,7 +60,7 @@ html(lang="es")
                     v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar
                 
                   v-card-text
-                    v-expansion-panel(popout v-model="graphics" expand)
+                    v-expansion-panel(popout v-model="piezasExpansionPanel" expand)
                       v-expansion-panel-content(v-for="(p, index) in piezas" :key="index" ripple )
                         div(slot="header" )
                           i.v-icon.material-icons(:style="'font-size: 16px; color:'+p.c") photo_size_select_actual

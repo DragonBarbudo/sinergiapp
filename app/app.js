@@ -49,8 +49,7 @@ new Vue({
   components: {Swatches: window.VueSwatches.default},
   data: () => ({
     dialog: false,
-    graphics : [],
-    blocks: [],
+
     material: {
       w: 122,
       h: 244,
@@ -73,9 +72,12 @@ new Vue({
         { id: 3, w:120, h:90 },
       ]
     },
+    piezasExpansionPanel : [],
     piezas: [
       {w:40, h:40, q:11, c:"#C0382B"}
     ],
+
+    blocks: [],
     graficos:[],
     paginas : [{}]
 
@@ -96,7 +98,7 @@ new Vue({
     },
     deleteGraphic : function(index){
       this.piezas.splice(index, 1);
-      this.graphics = []
+      this.piezasExpansionPanel = []
     }
   },
   computed : {
@@ -108,6 +110,7 @@ new Vue({
    visualizer : function(){
      this.blocks = [];
      this.graficos = [];
+
 
 
      for(var p = 0; p<this.piezas.length; p++){
