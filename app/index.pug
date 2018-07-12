@@ -138,7 +138,7 @@ html(lang="es")
                             
                             g(v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'" )
                               | {{g}}
-                              rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c")
+                              rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c" vector-effect="non-scaling-stroke")
                           
                       
                       
