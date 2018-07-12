@@ -7,7 +7,6 @@
     <title>SinergiApp</title>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>
     <link rel="stylesheet" href="//unpkg.com/vuetify/dist/vuetify.min.css"/>
-    <link rel="stylesheet" href="app/icomoon.css"/>
     <link rel="stylesheet" href="//unpkg.com/vue-swatches/dist/vue-swatches.min.css"/>
     <link rel="stylesheet" href="app/app.css"/>
   </head>
@@ -163,7 +162,7 @@
                           <div class="mat_h caption">{{material.h}} cm</div>
                           <svg class="rendered elevation-4" :view-box.camel="viewboxSize" :id="'page-'+index">
                             <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">{{g}}
-                              <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c"></rect>
+                              <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c" vector-effect="non-scaling-stroke"></rect>
                             </g>
                           </svg>
                         </div>
@@ -187,7 +186,7 @@
     <script src="//unpkg.com/vue-swatches@1.0.1/dist/vue-swatches.min.js"></script>
     <script src="//cdn.rawgit.com/yWorks/jsPDF/ee8bcea8/dist/jspdf.min.js"></script>
     <script src="//cdn.rawgit.com/yWorks/svg2pdf.js/master/dist/svg2pdf.min.js"></script>
-    <!--script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js")-->
+    <script src="app/packer.js"></script>
     <script src="app/app.js"></script>
   </body>
 </html>

@@ -1,49 +1,3 @@
-
-
-Packer = function(w, h) {
-  this.init(w, h);
-};
-
-Packer.prototype = {
-
-  init: function(w, h) {
-    this.root = { x: 0, y: 0, w: w, h: h };
-  },
-
-  fit: function(blocks) {
-    var n, node, block;
-    for (n = 0; n < blocks.length; n++) {
-      block = blocks[n];
-      if (node = this.findNode(this.root, block.w, block.h))
-        block.fit = this.splitNode(node, block.w, block.h);
-    }
-  },
-
-  findNode: function(root, w, h) {
-    if (root.used)
-      return this.findNode(root.right, w, h) || this.findNode(root.down, w, h);
-    else if ((w <= root.w) && (h <= root.h))
-      return root;
-    else
-      return null;
-  },
-
-  splitNode: function(node, w, h) {
-    node.used = true;
-    node.down  = { x: node.x,     y: node.y + h, w: node.w,     h: node.h - h };
-    node.right = { x: node.x + w, y: node.y,     w: node.w - w, h: h          };
-    return node;
-  }
-
-}
-
-
-
-
-
-
-
-
 new Vue({
   el: '#app',
   components: {Swatches: window.VueSwatches.default},
@@ -53,6 +7,7 @@ new Vue({
     material: {
       w: 122,
       h: 244,
+
       tipo: 'flexible',
       rigidoElegido : 0,
       rebase: false,
@@ -108,23 +63,23 @@ new Vue({
 
 
    visualizer : function(){
+     //Reseting Blocks packer
      this.blocks = [];
+     //Cleaning full graphics per page
      this.graficos = [];
 
 
-
+     //
      for(var p = 0; p<this.piezas.length; p++){
        for(var pi = 0; pi<this.piezas[p].q; pi++){
          this.blocks.push( { w: this.piezas[p].w*1, h:this.piezas[p].h*1, c: this.piezas[p].c, } );
        }
      }
 
-
-
-      this.graficos = [];
-
+      //Define packer container
       var packer = new Packer(this.material.w, this.material.h);
 
+      //Sort each block > biggest to smallest
       this.blocks = this.blocks.sort(function(a,b) { return (b.w*b.h < a.w*a.h ); });
       packer.fit(this.blocks);
 
