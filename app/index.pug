@@ -73,8 +73,9 @@ html(lang="es")
                               v-flex: v-text-field(v-model="p.q" box type="number" label="Cantidad" outline min="1")                              
                             v-layout
                               swatches(v-model="p.c" swatch-size="20" spacing-size="2" inline)
-                              v-spacer
-                              v-btn(color="red" outline v-if="index != 0" small v-on:click="deleteGraphic(index)") Eliminar
+                              v-flex: v-layout(column="true")
+                                v-btn(color="gray" outline small v-on:click="fillout(index)") Rellenar
+                                v-btn(color="red" outline v-if="index != 0" small v-on:click="deleteGraphic(index)") Eliminar
               
 
                 v-card.mt-2
@@ -106,17 +107,6 @@ html(lang="es")
                         v-layout(v-if="material.rebaseTipo==2 || material.rebaseTipo==3")
                           v-flex: v-text-field(v-model="material.rebases.t" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" outline)
                           v-flex: v-text-field(v-model="material.rebases.t" label="Derecho (cm)" type="number" :append-icon="'border_right'" outline)
-                          
-                      
-                      
-                //p.subtitle X: {{objectsInX}} | Y: {{objectsInY}}
-                //p.subtitle Total: {{objectsTotal}}
-                  
-                
-                v-dialog(v-model="dialog")
-                  v-card
-                    v-card-text: p Tu archivo ha sido descargado.
-              
               
               
               
@@ -126,9 +116,8 @@ html(lang="es")
                 v-card.red.elevation-2
                   v-card-text
                     #visualizer {{visualizer}}
-                    
-                    v-tabs(dark slider-color="white" color="red darken-4")
-                      v-tab(v-for="(page, index) in paginas" :key="index" ripple) {{index+1}}
+                    v-tabs(dark slider-color="white" color="red darken-4" show-arrows)
+                      v-tab(v-for="(page, index) in paginas" :key="index" ripple) Hoja {{index+1}}
                       v-tab-item(v-for="(page, index) in paginas" :key="index")   
                         
                         .svg-container
@@ -139,8 +128,9 @@ html(lang="es")
                             g(v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'" )
                               | {{g}}
                               rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c" vector-effect="non-scaling-stroke")
-                        
-                         
+                        v-layout
+                          v-flex Ocupado: {{page.ocupado}} cm2
+                          v-flex Merma: {{(material.w*material.h)-page.ocupado}} cm2
                         //.svg-container
                           .mat_w.caption {{material.w}} cm
                           .mat_h.caption {{material.h}} cm
@@ -156,7 +146,10 @@ html(lang="es")
           div Última modificación: #{new Date().toLocaleString()}
           v-spacer
           div Sinergia Publicitaria. {{ new Date().getFullYear() }}.
-      
+        
+        v-dialog(v-model="dialog")
+          v-card
+            v-card-text: p Tu archivo ha sido descargado.
     script(src="//unpkg.com/vue/dist/vue.js")
     //script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
     script(src="//unpkg.com/vuetify/dist/vuetify.min.js")

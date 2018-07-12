@@ -79,8 +79,12 @@
                               </v-layout>
                               <v-layout>
                                 <swatches v-model="p.c" swatch-size="20" spacing-size="2" inline="inline"></swatches>
-                                <v-spacer></v-spacer>
-                                <v-btn color="red" outline="outline" v-if="index != 0" small="small" v-on:click="deleteGraphic(index)">Eliminar</v-btn>
+                                <v-flex>
+                                  <v-layout column="true">
+                                    <v-btn color="gray" outline="outline" small="small" v-on:click="fillout(index)">Rellenar</v-btn>
+                                    <v-btn color="red" outline="outline" v-if="index != 0" small="small" v-on:click="deleteGraphic(index)">Eliminar</v-btn>
+                                  </v-layout>
+                                </v-flex>
                               </v-layout>
                             </v-card-text>
                           </v-card>
@@ -139,23 +143,14 @@
                       </div>
                     </v-card-text>
                   </v-card>
-                  <!--p.subtitle X: {{objectsInX}} | Y: {{objectsInY}}-->
-                  <!--p.subtitle Total: {{objectsTotal}}-->
-                  <v-dialog v-model="dialog">
-                    <v-card>
-                      <v-card-text>
-                        <p>Tu archivo ha sido descargado.</p>
-                      </v-card-text>
-                    </v-card>
-                  </v-dialog>
                 </form>
               </v-flex>
               <v-flex xs12="xs12">
                 <v-card class="red elevation-2">
                   <v-card-text>
                     <div id="visualizer">{{visualizer}}</div>
-                    <v-tabs dark="dark" slider-color="white" color="red darken-4">
-                      <v-tab v-for="(page, index) in paginas" :key="index" ripple="ripple">{{index+1}}</v-tab>
+                    <v-tabs dark="dark" slider-color="white" color="red darken-4" show-arrows="show-arrows">
+                      <v-tab v-for="(page, index) in paginas" :key="index" ripple="ripple">Hoja {{index+1}}</v-tab>
                       <v-tab-item v-for="(page, index) in paginas" :key="index">  
                         <div class="svg-container">
                           <div class="mat_w caption">{{material.w}} cm</div>
@@ -166,6 +161,10 @@
                             </g>
                           </svg>
                         </div>
+                        <v-layout>
+                          <v-flex>Ocupado: {{page.ocupado}} cm2</v-flex>
+                          <v-flex>Merma: {{(material.w*material.h)-page.ocupado}} cm2</v-flex>
+                        </v-layout>
                         <!--.svg-container
                         .mat_w.caption {{material.w}} cm
                         .mat_h.caption {{material.h}} cm
@@ -187,10 +186,17 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark="dark" height="auto" tile="tile">
-          <div>Última modificación: 2018-7-12 16:23:05</div>
+          <div>Última modificación: 2018-7-12 17:15:41</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
+        <v-dialog v-model="dialog">
+          <v-card>
+            <v-card-text>
+              <p>Tu archivo ha sido descargado.</p>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </v-app>
     </div>
     <script src="//unpkg.com/vue/dist/vue.js"></script>

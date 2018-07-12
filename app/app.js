@@ -3,11 +3,10 @@ new Vue({
   components: {Swatches: window.VueSwatches.default},
   data: () => ({
     dialog: false,
-
+    processing : false,
     material: {
       w: 122,
       h: 244,
-
       tipo: 'flexible',
       rigidoElegido : 0,
       rebase: false,
@@ -54,6 +53,23 @@ new Vue({
     deleteGraphic : function(index){
       this.piezas.splice(index, 1);
       this.piezasExpansionPanel = []
+    },
+    fillout : function(index){
+      var currentPages = this.paginas.length;
+
+
+      this.filling = setInterval(function(){
+        if(this.paginas.length > currentPages){
+          clearInterval(this.filling);
+          this.piezas[index].q--;
+        } else {
+          this.piezas[index].q++;
+        }
+
+      }.bind(this), 100);
+
+
+
     }
   },
   computed : {
@@ -63,20 +79,14 @@ new Vue({
 
 
    visualizer : function(){
-
+     this.processing = true;
      var pageCount = 0;
      var temporals = [];
 
-
      //CREATE PAGE 1
      this.paginas = [
-       { graphics: [] }
+       { graphics: [], ocupado:0 }
      ]
-
-
-
-
-
 
      //Reseting Blocks packer: Array 1
      this.blocks = [];
@@ -98,7 +108,7 @@ new Vue({
         //Define packer container
         var packer = new Packer(this.material.w, this.material.h);
         //Sort each block > biggest to smallest
-        this.blocks = this.blocks.sort(function(a,b) { return (b.w*b.h < a.w*a.h ); });
+        this.blocks = this.blocks.sort(function(a,b) { return (b.h < a.h); });
         //Sort inside the packer area
         packer.fit(this.blocks);
 
@@ -107,10 +117,11 @@ new Vue({
         for(var n = 0; n<this.blocks.length; n++){
           var block = this.blocks[n];
           if(block.fit){ //FITS
-
             var theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
             this.paginas[pageCount].graphics.push( theGraphic );
             this.graficos.push( theGraphic );
+            console.log(block.area);
+            this.paginas[pageCount].ocupado+= block.w * block.h;
           }
           else { //DOESNT FITS... new page
             var theGraphic = { w:block.w, h:block.h, c:block.c };
@@ -120,13 +131,12 @@ new Vue({
         }
         if(temporals.length>0){
           this.blocks = temporals;
-          this.paginas[pageCount+1] = {
-            graphics: []
-          }
+          this.paginas[pageCount+1] = { graphics: [], ocupado:0 }
           temporals = [];
           pageCount++;
         } else {
           endVizualizer = true;
+          this.processing = false;
         }
 
       }
