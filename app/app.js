@@ -63,40 +63,74 @@ new Vue({
 
 
    visualizer : function(){
-     //Reseting Blocks packer
+
+     var pageCount = 0;
+     var temporals = [];
+
+
+     //CREATE PAGE 1
+     this.paginas = [
+       { graphics: [] }
+     ]
+
+
+
+
+
+
+     //Reseting Blocks packer: Array 1
      this.blocks = [];
-     //Cleaning full graphics per page
+     //Cleaning full graphics per page: Array 2
      this.graficos = [];
 
-
-     //
+     //Convert pieces to individual graphics and store'em in blocks
      for(var p = 0; p<this.piezas.length; p++){
        for(var pi = 0; pi<this.piezas[p].q; pi++){
          this.blocks.push( { w: this.piezas[p].w*1, h:this.piezas[p].h*1, c: this.piezas[p].c, } );
        }
      }
 
-      //Define packer container
-      var packer = new Packer(this.material.w, this.material.h);
 
-      //Sort each block > biggest to smallest
-      this.blocks = this.blocks.sort(function(a,b) { return (b.w*b.h < a.w*a.h ); });
-      packer.fit(this.blocks);
+     //FOR of PAGES
+     var endVizualizer = false;
+     while(!endVizualizer){
 
-      for(var n = 0; n<this.blocks.length; n++){
-        var block = this.blocks[n];
+        //Define packer container
+        var packer = new Packer(this.material.w, this.material.h);
+        //Sort each block > biggest to smallest
+        this.blocks = this.blocks.sort(function(a,b) { return (b.w*b.h < a.w*a.h ); });
+        //Sort inside the packer area
+        packer.fit(this.blocks);
 
-        if(block.fit){
-          var theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
-          this.graficos.push( theGraphic );
+        //Fit in area? Store each block in the page where it Fit
+        //Otherwise save this in a new page
+        for(var n = 0; n<this.blocks.length; n++){
+          var block = this.blocks[n];
+          if(block.fit){ //FITS
+
+            var theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
+            this.paginas[pageCount].graphics.push( theGraphic );
+            this.graficos.push( theGraphic );
+          }
+          else { //DOESNT FITS... new page
+            var theGraphic = { w:block.w, h:block.h, c:block.c };
+            temporals.push(theGraphic);
+
+          }
         }
-        else {
-          var theGraphic = { w:block.w, h:block.h, c:block.c };
-          console.log(theGraphic);
+        if(temporals.length>0){
+          this.blocks = temporals;
+          this.paginas[pageCount+1] = {
+            graphics: []
+          }
+          temporals = [];
+          pageCount++;
+        } else {
+          endVizualizer = true;
         }
+
       }
-
-   }
+   } //ends visualizer
 
 
   },

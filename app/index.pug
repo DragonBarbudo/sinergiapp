@@ -128,9 +128,20 @@ html(lang="es")
                     #visualizer {{visualizer}}
                     
                     v-tabs(dark slider-color="white" color="red darken-4")
-                      v-tab(v-for="(page, index) in paginas" :key="index" ripple) Página {{index+1}}
-                      v-tab-item(v-for="(page, index) in paginas" :key="index")      
+                      v-tab(v-for="(page, index) in paginas" :key="index" ripple) {{index+1}}
+                      v-tab-item(v-for="(page, index) in paginas" :key="index")   
+                        
                         .svg-container
+                          .mat_w.caption {{material.w}} cm
+                          .mat_h.caption {{material.h}} cm
+                          svg.rendered(:view-box.camel="viewboxSize" :id="'page-'+index").elevation-4
+                            
+                            g(v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'" )
+                              | {{g}}
+                              rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c" vector-effect="non-scaling-stroke")
+                        
+                         
+                        //.svg-container
                           .mat_w.caption {{material.w}} cm
                           .mat_h.caption {{material.h}} cm
                           svg.rendered(:view-box.camel="viewboxSize" :id="'page-'+index").elevation-4
@@ -142,6 +153,7 @@ html(lang="es")
                       
                       
         v-footer(dark height="auto" tile).red.darken-4.pa-3
+          div Última modificación: #{new Date().toLocaleString()}
           v-spacer
           div Sinergia Publicitaria. {{ new Date().getFullYear() }}.
       
