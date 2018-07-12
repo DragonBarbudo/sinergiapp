@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>SinergiApp</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"/>
+    <link rel="stylesheet" href="//unpkg.com/vuetify/dist/vuetify.min.css"/>
+    <link rel="stylesheet" href="app/icomoon.css"/>
+    <link rel="stylesheet" href="//unpkg.com/vue-swatches/dist/vue-swatches.min.css"/>
+    <link rel="stylesheet" href="app/app.css"/>
+  </head>
+  <body>
+    <div id="app">
+      <v-app id="inspire">
+        <v-toolbar class="red darken-4 pa-3" dark="dark">
+          <v-toolbar-title>SINERGIAPP</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn v-on:click="downloadPDF" flat="flat">Descargar PDF</v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-content>
+          <v-container>
+            <v-layout>
+              <v-flex class="mr-4" xs12="xs12">
+                <form>
+                  <v-card class="mb-2">
+                    <v-toolbar card="card">
+                      <v-toolbar-title>Material</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                      <v-btn-toggle v-model="material.tipo" mandatory="mandatory">
+                        <v-btn value="flexible" color="red" dark="dark" outline="outline"><span>Flexible</span>
+                          <v-icon>aspect_ratio</v-icon>
+                        </v-btn>
+                        <v-btn value="rigido" color="red" dark="dark" outline="outline"><span>Rígido</span>
+                          <v-icon>settings_overscan</v-icon>
+                        </v-btn>
+                      </v-btn-toggle>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-layout class="mb-2" v-if="material.tipo == 'rigido'" align-center="align-center" justify-center="justify-center">
+                        <v-btn-toggle v-model="material.rigidoElegido" mandatory="mandatory">
+                          <v-btn v-for="(te,index) in material.medidas" :key="te.id" :value="te.id" color="red" dark="dark" outline="outline" flat="flat"><span>{{te.w}} x {{te.h}}</span></v-btn>
+                        </v-btn-toggle>
+                      </v-layout>
+                      <v-layout>
+                        <v-flex>
+                          <v-text-field v-model="material.w" label="Ancho (cm)" required="required" type="number" :append-icon="'swap_horiz'" outline="outline" :disabled="material.tipo == 'rigido'"></v-text-field>
+                        </v-flex>
+                        <v-flex>
+                          <v-text-field v-model="material.h" label="Alto (cm)" required="required" type="number" :append-icon="'swap_vert'" outline="outline" :disabled="material.tipo == 'rigido'"></v-text-field>
+                        </v-flex>
+                      </v-layout>
+                    </v-card-text>
+                  </v-card>
+                  <v-card class="mt-2">
+                    <v-toolbar card="card">
+                      <v-toolbar-title>Piezas</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                      <v-btn color="red" dark="dark" outline="outline" small="small" v-on:click="addGraphic">Agregar</v-btn>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-expansion-panel popout="popout" v-model="graphics" expand="expand">
+                        <v-expansion-panel-content v-for="(p, index) in piezas" :key="index" ripple="ripple">
+                          <div slot="header"><i class="v-icon material-icons" :style="'font-size: 16px; color:'+p.c">photo_size_select_actual</i><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong></div>
+                          <v-card>
+                            <v-card-text>
+                              <v-layout>
+                                <v-flex>
+                                  <v-text-field v-model="p.w" box="box" type="number" label="Ancho (cm)" outline="outline" min="1"></v-text-field>
+                                </v-flex>
+                                <v-flex>
+                                  <v-text-field v-model="p.h" box="box" type="number" label="Alto (cm)" outline="outline" min="1"></v-text-field>
+                                </v-flex>
+                                <v-flex>
+                                  <v-text-field v-model="p.q" box="box" type="number" label="Cantidad" outline="outline" min="1">                             </v-text-field>
+                                </v-flex>
+                              </v-layout>
+                              <v-layout>
+                                <swatches v-model="p.c" swatch-size="20" spacing-size="2" inline="inline"></swatches>
+                                <v-spacer></v-spacer>
+                                <v-btn color="red" outline="outline" v-if="index != 0" small="small" v-on:click="deleteGraphic(index)">Eliminar</v-btn>
+                              </v-layout>
+                            </v-card-text>
+                          </v-card>
+                        </v-expansion-panel-content>
+                      </v-expansion-panel>
+                    </v-card-text>
+                  </v-card>
+                  <v-card class="mt-2">
+                    <v-toolbar card="card">
+                      <v-toolbar-title>Acabados para {{material.tipo}}s</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                    </v-toolbar>
+                    <v-alert type="error" :value="true" outline="outline">Zona de acabados en construcción                     </v-alert>
+                    <v-card-text v-if="material.tipo == 'rigido'">
+                      <v-checkbox :label="'Margen para corte'" v-model="material.margen" color="red"></v-checkbox>
+                      <v-radio-group label="Medianil" v-model="material.medianil" mandatory="mandatory">
+                        <v-layout>
+                          <v-radio v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red" :key="m.name"></v-radio>
+                        </v-layout>
+                      </v-radio-group>
+                    </v-card-text>
+                    <v-card-text v-if="material.tipo == 'flexible'">
+                      <v-switch label="Rebase perimetral (Jareta)" v-model="material.rebase" color="red"></v-switch>
+                      <div v-if="material.rebase">
+                        <v-layout align-center="align-center" justify-center="justify-center">
+                          <v-btn-toggle v-model="material.rebaseTipo" mandatory="mandatory">
+                            <v-btn value="1" color="red" dark="dark" outline="outline">
+                              <v-icon class="icon-jareta_a" small="small"></v-icon>
+                            </v-btn>
+                            <v-btn value="2" color="red" dark="dark" outline="outline">
+                              <v-icon class="icon-jareta_b" small="small"></v-icon>
+                            </v-btn>
+                            <v-btn value="3" color="red" dark="dark" outline="outline">
+                              <v-icon class="icon-jareta_c" small="small"></v-icon>
+                            </v-btn>
+                          </v-btn-toggle>
+                        </v-layout>
+                        <v-container>
+                          <v-layout v-if="material.rebaseTipo==1 || material.rebaseTipo==3">
+                            <v-flex>
+                              <v-text-field v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" outline="outline"></v-text-field>
+                            </v-flex>
+                            <v-flex>
+                              <v-text-field v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" outline="outline"></v-text-field>
+                            </v-flex>
+                          </v-layout>
+                          <v-layout v-if="material.rebaseTipo==2 || material.rebaseTipo==3">
+                            <v-flex>
+                              <v-text-field v-model="material.rebases.t" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" outline="outline"></v-text-field>
+                            </v-flex>
+                            <v-flex>
+                              <v-text-field v-model="material.rebases.t" label="Derecho (cm)" type="number" :append-icon="'border_right'" outline="outline"></v-text-field>
+                            </v-flex>
+                          </v-layout>
+                        </v-container>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                  <!--p.subtitle X: {{objectsInX}} | Y: {{objectsInY}}-->
+                  <!--p.subtitle Total: {{objectsTotal}}-->
+                  <v-dialog v-model="dialog">
+                    <v-card>
+                      <v-card-text>
+                        <p>Tu archivo ha sido descargado.</p>
+                      </v-card-text>
+                    </v-card>
+                  </v-dialog>
+                </form>
+              </v-flex>
+              <v-flex xs12="xs12">
+                <v-card class="red elevation-2">
+                  <v-card-text>
+                    <div id="visualizer">{{visualizer}}</div>
+                    <v-tabs dark="dark" slider-color="white" color="red darken-4">
+                      <v-tab v-for="(page, index) in paginas" :key="index" ripple="ripple">Página {{index+1}}</v-tab>
+                      <v-tab-item v-for="(page, index) in paginas" :key="index">     
+                        <div class="svg-container">
+                          <div class="mat_w caption">{{material.w}} cm</div>
+                          <div class="mat_h caption">{{material.h}} cm</div>
+                          <svg class="rendered elevation-4" :view-box.camel="viewboxSize" :id="'page-'+index">
+                            <g v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'">{{g}}
+                              <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c" vector-effect="non-scaling-stroke"></rect>
+                            </g>
+                          </svg>
+                        </div>
+                      </v-tab-item>
+                    </v-tabs>
+                  </v-card-text>
+                </v-card>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-content>
+        <v-footer class="red darken-4 pa-3" dark="dark" height="auto" tile="tile">
+          <v-spacer></v-spacer>
+          <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
+        </v-footer>
+      </v-app>
+    </div>
+    <script src="//unpkg.com/vue/dist/vue.js"></script>
+    <!--script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")-->
+    <script src="//unpkg.com/vuetify/dist/vuetify.min.js"></script>
+    <script src="//unpkg.com/vue-swatches@1.0.1/dist/vue-swatches.min.js"></script>
+    <script src="//cdn.rawgit.com/yWorks/jsPDF/ee8bcea8/dist/jspdf.min.js"></script>
+    <script src="//cdn.rawgit.com/yWorks/svg2pdf.js/master/dist/svg2pdf.min.js"></script>
+    <!--script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js")-->
+    <script src="app/app.js"></script>
+  </body>
+</html>

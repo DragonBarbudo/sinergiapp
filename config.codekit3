@@ -4,10 +4,10 @@
 	{
 		"name": "Process All Remaining Files and Folders",
 		"stepType": 1,
-		"uuidString": "0C4AAEDC-E91D-4F4D-97C0-2D799B5F9284"
+		"uuidString": "F8E38A5E-C32B-41E8-82D4-6F943636B1A5"
 		}
 	],
-"creatorBuild": "26667",
+"creatorBuild": "26261",
 "files": {
 	"\/.gitattributes": {
 		"cB": 0,
@@ -31,7 +31,7 @@
 		"bl": 0,
 		"ft": 16,
 		"ma": 0,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/app\/app-min.css",
 		"oF": 0,
 		"oS": 3
@@ -61,7 +61,7 @@
 		"ie": 1,
 		"iI": 0,
 		"ma": 1,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/app\/app.css",
 		"oF": 0,
 		"oS": 0,
@@ -106,7 +106,7 @@
 		"bl": 0,
 		"ft": 16,
 		"ma": 0,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/app\/icomoon-min-min.css",
 		"oF": 0,
 		"oS": 3
@@ -116,7 +116,7 @@
 		"bl": 0,
 		"ft": 16,
 		"ma": 0,
-		"oA": 0,
+		"oA": 1,
 		"oAP": "\/app\/icomoon-min.css",
 		"oF": 0,
 		"oS": 3
@@ -126,8 +126,8 @@
 		"cOD": 1,
 		"ft": 512,
 		"oA": 0,
-		"oAP": "\/index.html",
-		"oF": 2,
+		"oAP": "\/app\/index.html",
+		"oF": 0,
 		"oS": 0
 		},
 	"\/CNAME": {
@@ -153,8 +153,7 @@
 	"creationDate": 552423872,
 	"displayValue": "sinergiapp",
 	"displayValueWasSetByUser": 0,
-	"iconImageName": "meme-soon",
-	"iconImageWasSetByUser": 0
+	"iconImageName": "meme-soon"
 	},
 "projectSettings": {
 	"abortBuildOnError": 1,
@@ -162,7 +161,6 @@
 	"animateCSSInjections": 1,
 	"autoBuildNewItems": 1,
 	"autoprefixerBrowserString": "> 1%, last 2 versions, Firefox ESR, Opera 12.1",
-	"autoprefixerEnableIEGrid": 0,
 	"babelAuxiliaryCommentAfter": "",
 	"babelAuxiliaryCommentBefore": "",
 	"babelConfigFileHandlingType": 0,
@@ -1957,7 +1955,6 @@
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
 		"autoOutputPathStyle": 0,
-		"outputFormat": 0,
 		"quality": 100
 		},
 	"languageDefaultsJS": {
