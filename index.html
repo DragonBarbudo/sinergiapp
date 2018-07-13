@@ -146,17 +146,24 @@
                     <v-tabs dark="dark" slider-color="white" color="red darken-4" show-arrows="show-arrows">
                       <v-tab v-for="(page, index) in paginas" :key="index" ripple="ripple">Hoja {{index+1}}</v-tab>
                       <v-tab-item v-for="(page, index) in paginas" :key="index">  
-                        <p>{{material.w_rendered}} x {{material.h_rendered}} | Medianil: {{material.medianil}}</p>
+                        <!--p {{material.w_rendered}} x {{material.h_rendered}} | Medianil: {{material.medianil}}-->
                         <div class="svg-container">
                           <div class="mat_w caption">{{material.w}} cm</div>
                           <div class="mat_h caption">{{material.h}} cm</div>
                           <svg class="rendered elevation-4" :view-box.camel="viewboxSize" :id="'page-'+index">
+                            <!-- MARGEN-->
                             <g v-if="material.margen">
-                              <rect :width="material.w" height="1" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"> </rect>
+                              <rect :width="material.w" height="1" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"></rect>
                               <rect :width="1" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"></rect>
                               <rect :width="material.w" height="1" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'"></rect>
                               <rect :width="1" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'"></rect>
                             </g>
+                            <!--REBASE-->
+                            <rect class="rebase-t" :width="material.w" :height="material.rebases.t" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"> </rect>
+                            <rect class="rebase-b" :width="material.w" :height="material.rebases.b" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-material.rebases.b)+')'"></rect>
+                            <rect class="rebase-l" :width="material.rebases.l" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"></rect>
+                            <rect class="rebase-r" :width="material.rebases.r" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate('+(material.w-material.rebases.r)+',0)'"></rect>
+                            <!--GRAFICO-->
                             <g v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'">
                               <template v-if="material.medianil == 0">
                                 <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.1)" stroke-width=".3" v-bind:stroke="g.c"></rect>
@@ -201,7 +208,7 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark="dark" height="auto" tile="tile">
-          <div>Última modificación: 2018-7-13 15:41:37</div>
+          <div>Última modificación: 2018-7-13 16:39:31</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>

@@ -85,6 +85,8 @@ new Vue({
      }
      //Rebase perimetral
 
+      this.material.w_rendered = this.material.w - this.material.rebases.l - this.material.rebases.r;
+      this.material.h_rendered = this.material.h - this.material.rebases.t - this.material.rebases.b;
 
 
 
@@ -134,7 +136,7 @@ new Vue({
             if(this.material.margen){
               theGraphic = { y:block.fit.y+1, x:block.fit.x+1, w:block.w, h:block.h, c:block.c };
             } else {
-              theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
+              theGraphic = { y:block.fit.y+this.material.rebases.t*1, x:block.fit.x+this.material.rebases.l*1, w:block.w, h:block.h, c:block.c };
             }
             this.paginas[pageCount].graphics.push( theGraphic );
             this.graficos.push( theGraphic );
@@ -169,7 +171,8 @@ new Vue({
     material: {
         handler(val){
           if(val.tipo == 'flexible'){
-
+            this.material.margen = false;
+            this.material.medianil = 0;
           } else if(val.tipo == 'rigido'){
             this.material.w = this.material.medidas[this.material.rigidoElegido].w;
             this.material.h = this.material.medidas[this.material.rigidoElegido].h;
