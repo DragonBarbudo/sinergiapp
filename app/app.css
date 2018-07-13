@@ -19,13 +19,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.icon-jareta_a:before {
+.icon-jareta_1:before {
   content: "\e900";
 }
-.icon-jareta_b:before {
+.icon-jareta_2:before {
   content: "\e901";
 }
-.icon-jareta_c:before {
+.icon-jareta_3:before {
   content: "\e902";
 }
 .svg-container {
@@ -48,6 +48,9 @@
   transform-origin: left;
   text-align: right;
   min-width: 100px;
+}
+.svg-container .resultado {
+  color: #fff;
 }
 svg.rendered {
   width: 90%;

@@ -3,14 +3,15 @@ new Vue({
   components: {Swatches: window.VueSwatches.default},
   data: () => ({
     dialog: false,
-    processing : false,
     material: {
       w: 122,
       h: 244,
+      w_rendered: 0,
+      h_rendered: 0,
       tipo: 'flexible',
       rigidoElegido : 0,
       rebase: false,
-      rebaseTipo: 1,
+      rebaseTipo: 0,
       rebases: { t:0, r:0, b:0, l:0},
       margen: false,
       medianil: 0.0,
@@ -30,11 +31,9 @@ new Vue({
     piezas: [
       {w:40, h:40, q:11, c:"#C0382B"}
     ],
-
     blocks: [],
     graficos:[],
     paginas : [{}]
-
   }),
   methods: {
     downloadPDF : function(){
@@ -57,7 +56,6 @@ new Vue({
     fillout : function(index){
       var currentPages = this.paginas.length;
 
-
       this.filling = setInterval(function(){
         if(this.paginas.length > currentPages){
           clearInterval(this.filling);
@@ -65,10 +63,7 @@ new Vue({
         } else {
           this.piezas[index].q++;
         }
-
-      }.bind(this), 100);
-
-
+      }.bind(this), 10);
 
     }
   },
@@ -79,7 +74,25 @@ new Vue({
 
 
    visualizer : function(){
-     this.processing = true;
+
+     //FULL RENDERED SIZES
+     //Margen para corte
+     this.material.w_rendered = this.material.w;
+     this.material.h_rendered = this.material.h;
+     if(this.material.margen){
+       this.material.w_rendered = this.material.w - 2;
+       this.material.h_rendered = this.material.h - 2;
+     }
+     //Rebase perimetral
+
+
+
+
+
+
+
+
+
      var pageCount = 0;
      var temporals = [];
 
@@ -106,7 +119,7 @@ new Vue({
      while(!endVizualizer){
 
         //Define packer container
-        var packer = new Packer(this.material.w, this.material.h);
+        var packer = new Packer(this.material.w_rendered, this.material.h_rendered);
         //Sort each block > biggest to smallest
         this.blocks = this.blocks.sort(function(a,b) { return (b.h < a.h); });
         //Sort inside the packer area
@@ -117,10 +130,14 @@ new Vue({
         for(var n = 0; n<this.blocks.length; n++){
           var block = this.blocks[n];
           if(block.fit){ //FITS
-            var theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
+            var theGraphic;
+            if(this.material.margen){
+              theGraphic = { y:block.fit.y+1, x:block.fit.x+1, w:block.w, h:block.h, c:block.c };
+            } else {
+              theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
+            }
             this.paginas[pageCount].graphics.push( theGraphic );
             this.graficos.push( theGraphic );
-            console.log(block.area);
             this.paginas[pageCount].ocupado+= block.w * block.h;
           }
           else { //DOESNT FITS... new page
@@ -129,17 +146,21 @@ new Vue({
 
           }
         }
-        if(temporals.length>0){
+
+
+        if(temporals.length>0 && this.paginas[pageCount].graphics.length>0){
           this.blocks = temporals;
           this.paginas[pageCount+1] = { graphics: [], ocupado:0 }
           temporals = [];
           pageCount++;
         } else {
           endVizualizer = true;
-          this.processing = false;
         }
 
       }
+
+
+
    } //ends visualizer
 
 
