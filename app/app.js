@@ -12,7 +12,7 @@ new Vue({
       rigidoElegido : 0,
       rebase: false,
       rebaseTipo: 0,
-      rebases: { t:0, r:0, b:0, l:0},
+      rebases: { t:0, r:0, b:0, l:0, tb:0, lr:0},
       margen: false,
       medianil: 0.0,
       medianiles:[
@@ -150,7 +150,7 @@ new Vue({
         }
 
 
-        if(temporals.length>0 && this.paginas[pageCount].graphics.length>0){
+        if(temporals.length>0 && this.paginas[pageCount].graphics.length>0 && pageCount<10){
           this.blocks = temporals;
           this.paginas[pageCount+1] = { graphics: [], ocupado:0 }
           temporals = [];
@@ -176,6 +176,23 @@ new Vue({
           } else if(val.tipo == 'rigido'){
             this.material.w = this.material.medidas[this.material.rigidoElegido].w;
             this.material.h = this.material.medidas[this.material.rigidoElegido].h;
+          }
+          if(this.material.rebaseTipo==0){
+            this.material.rebases.l = 0;
+            this.material.rebases.r = 0;
+            this.material.rebases.lr = 0;
+
+            this.material.rebases.t = val.rebases.tb;
+            this.material.rebases.b = val.rebases.tb;
+
+          }
+          if(this.material.rebaseTipo==1){
+            this.material.rebases.t = 0;
+            this.material.rebases.b = 0;
+            this.material.rebases.tb = 0;
+
+            this.material.rebases.l = val.rebases.lr;
+            this.material.rebases.r = val.rebases.lr;
           }
 
       },
