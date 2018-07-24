@@ -21,7 +21,7 @@ html(lang="es")
           v-toolbar().blue-grey.lighten-3
             v-toolbar-title Configurar documento
             v-spacer
-            v-btn(icon @click.stop="drawer = !drawer"): v-icon close
+            v-btn(icon @click.stop="drawer = !drawer").hidden-lg-and-up: v-icon close
           include modules/_material.pug
           include modules/_piezas.pug  
           include modules/_acabados.pug

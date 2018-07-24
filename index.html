@@ -18,7 +18,7 @@
           <v-toolbar class="blue-grey lighten-3">
             <v-toolbar-title>Configurar documento</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon @click.stop="drawer = !drawer">
+            <v-btn class="hidden-lg-and-up" icon @click.stop="drawer = !drawer">
               <v-icon>close</v-icon>
             </v-btn>
           </v-toolbar>
@@ -138,18 +138,17 @@
                     </v-btn>
                   </v-btn-toggle>
                 </v-layout>
-                <v-container>
+                <v-container grid-list-md fluid>
                   <template v-if="material.rebaseTipo==0">
                     <v-layout>
                       <v-flex>
-                        <v-text-field v-model="material.rebases.tb" label="Rebase (cm)" type="number" outline min="0"></v-text-field>
+                        <v-text-field v-model="material.rebases.tb" label="Rebase (cm)" type="number" box min="0" color="red"></v-text-field>
                       </v-flex>
-                      <v-flex>&nbsp;</v-flex>
-                      <v-flex>&nbsp;</v-flex>
+                    </v-layout>
+                    <v-layout> 
                       <v-flex>
                         <v-text-field v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" disabled></v-text-field>
                       </v-flex>
-                      <v-flex>&nbsp;</v-flex>
                       <v-flex>
                         <v-text-field v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" disabled></v-text-field>
                       </v-flex>
@@ -158,14 +157,13 @@
                   <template v-if="material.rebaseTipo==1">
                     <v-layout>
                       <v-flex>
-                        <v-text-field v-model="material.rebases.lr" label="Rebase (cm)" type="number" outline min="0"></v-text-field>
+                        <v-text-field v-model="material.rebases.lr" label="Rebase (cm)" type="number" box min="0" color="red"></v-text-field>
                       </v-flex>
-                      <v-flex>&nbsp;</v-flex>
-                      <v-flex>&nbsp;</v-flex>
+                    </v-layout>
+                    <v-layout>
                       <v-flex>
                         <v-text-field v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" disabled></v-text-field>
                       </v-flex>
-                      <v-flex>&nbsp;</v-flex>
                       <v-flex>
                         <v-text-field v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" disabled></v-text-field>
                       </v-flex>
@@ -174,18 +172,18 @@
                   <template v-if="material.rebaseTipo==2">
                     <v-layout>
                       <v-flex>
-                        <v-text-field v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" outline></v-text-field>
+                        <v-text-field v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" box color="red"></v-text-field>
                       </v-flex>
                       <v-flex>
-                        <v-text-field v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" outline></v-text-field>
+                        <v-text-field v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" box color="red"></v-text-field>
                       </v-flex>
                     </v-layout>
                     <v-layout>
                       <v-flex>
-                        <v-text-field v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" outline></v-text-field>
+                        <v-text-field v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" box color="red"></v-text-field>
                       </v-flex>
                       <v-flex>
-                        <v-text-field v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" outline></v-text-field>
+                        <v-text-field v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" box color="red"></v-text-field>
                       </v-flex>
                     </v-layout>
                   </template>
@@ -274,7 +272,7 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-7-24 16:39:36</div>
+          <div>Última modificación: 2018-7-24 16:46:46</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
@@ -295,6 +293,7 @@
             </v-card-title>
             <v-card-text>
               <ul>
+                <li>Flexible: Modificación de UI en rebase.</li>
                 <li>Flexible: Rebase perimetral corregido. Por pieza.</li>
                 <li>Flexible: Pinza añadida.</li>
                 <li>Tabs: Al modificar muestra la primer hoja.</li>

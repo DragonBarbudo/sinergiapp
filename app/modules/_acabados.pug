@@ -21,27 +21,23 @@ v-card.mt-2
       v-layout(align-center justify-center)
         v-btn-toggle(v-model="material.rebaseTipo" mandatory)
           v-btn(v-for="count in 3" :key="count" color="red" dark outline): v-icon(small :class="'icon-jareta_'+count")
-      v-container
+      v-container(grid-list-md fluid)
         template(v-if="material.rebaseTipo==0")
           v-layout
-            v-flex: v-text-field(v-model="material.rebases.tb" label="Rebase (cm)" type="number" outline min="0")
-            v-flex &nbsp;
-            v-flex &nbsp;
+            v-flex: v-text-field(v-model="material.rebases.tb" label="Rebase (cm)" type="number" box min="0" color="red")
+          v-layout  
             v-flex: v-text-field(v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" disabled)
-            v-flex &nbsp;
             v-flex: v-text-field(v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" disabled)
         template(v-if="material.rebaseTipo==1")
           v-layout
-            v-flex: v-text-field(v-model="material.rebases.lr" label="Rebase (cm)" type="number" outline min="0")
-            v-flex &nbsp;
-            v-flex &nbsp;
+            v-flex: v-text-field(v-model="material.rebases.lr" label="Rebase (cm)" type="number" box min="0" color="red")
+          v-layout
             v-flex: v-text-field(v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" disabled)
-            v-flex &nbsp;
             v-flex: v-text-field(v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" disabled)
         template(v-if="material.rebaseTipo==2")
           v-layout
-            v-flex: v-text-field(v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" outline)
-            v-flex: v-text-field(v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" outline)
+            v-flex: v-text-field(v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" box color="red")
+            v-flex: v-text-field(v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" box color="red")
           v-layout
-            v-flex: v-text-field(v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" outline)
-            v-flex: v-text-field(v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" outline)
+            v-flex: v-text-field(v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" box color="red")
+            v-flex: v-text-field(v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" box color="red")
