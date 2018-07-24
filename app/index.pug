@@ -18,6 +18,10 @@ html(lang="es")
         
         //:mini-variant.sync="mini" 
         v-navigation-drawer(v-model="drawer" fixed clipped app width="420")
+          v-toolbar().blue-grey.lighten-3
+            v-toolbar-title Configurar documento
+            v-spacer
+            v-btn(icon @click.stop="drawer = !drawer"): v-icon close
           include modules/_material.pug
           include modules/_piezas.pug  
           include modules/_acabados.pug

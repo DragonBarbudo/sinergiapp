@@ -15,6 +15,13 @@
       <v-app id="inspire">
         <!--:mini-variant.sync="mini" -->
         <v-navigation-drawer v-model="drawer" fixed clipped app width="420">
+          <v-toolbar class="blue-grey lighten-3">
+            <v-toolbar-title>Configurar documento</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click.stop="drawer = !drawer">
+              <v-icon>close</v-icon>
+            </v-btn>
+          </v-toolbar>
           <v-card class="mb-2">
             <v-toolbar card>
               <v-toolbar-title>Material</v-toolbar-title>
@@ -265,7 +272,7 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-7-24 16:26:48</div>
+          <div>Última modificación: 2018-7-24 16:36:17</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
