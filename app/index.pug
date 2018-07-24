@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+doctype html
 html(lang="es")
   head
     meta(charset="UTF-8")
@@ -11,196 +11,39 @@ html(lang="es")
     link(rel="stylesheet", href="app/app.css")
   body
   
-  
-  
-    div#app
 
+    div#app
+      
       v-app#inspire()
-        v-toolbar(dark).red.darken-4.pa-3
-          v-toolbar-title SINERGIAPP
-          v-spacer
-          v-toolbar-items
-            v-btn(v-on:click="downloadPDF" flat) Descargar PDF
+        
+        //:mini-variant.sync="mini" 
+        v-navigation-drawer(v-model="drawer" fixed clipped app width="420")
+          include modules/_material.pug
+          include modules/_piezas.pug  
+          include modules/_acabados.pug
+        
+        include modules/_toolbar.pug
+        
         v-content
           v-container
-            v-layout()
-              v-flex(xs12).mr-4: form
-                v-card.mb-2
-                  v-toolbar(card)
-                    v-toolbar-title Material
-                    v-spacer
-                    
-                    v-btn-toggle(v-model="material.tipo" mandatory)
-                      v-btn(value="flexible" color="red" dark outline)
-                        span Flexible
-                        v-icon aspect_ratio
-                      v-btn(value="rigido" color="red" dark outline)
-                        span Rígido
-                        v-icon settings_overscan
-                  
-                  v-card-text
-                  
-                    v-layout(v-if="material.tipo == 'rigido'" align-center justify-center).mb-2
-                      v-btn-toggle(v-model="material.rigidoElegido" mandatory)
-                        v-btn(v-for="(te,index) in material.medidas" :key="te.id" :value="te.id" color="red" dark outline flat)
-                          span {{te.w}} x {{te.h}}
-                    v-layout
-                      v-flex: v-text-field(v-model="material.w" label="Ancho (cm)" required type="number" :append-icon="'swap_horiz'" outline :disabled="material.tipo == 'rigido'")
-                      v-flex: v-text-field(v-model="material.h" label="Alto (cm)" required type="number" :append-icon="'swap_vert'" outline :disabled="material.tipo == 'rigido'")
-                    
+            
+                include modules/_visualizador.pug
                 
-                  
-                        
-                  
-                v-card.mt-2
-                  v-toolbar(card)
-                    v-toolbar-title Piezas
-                    v-spacer
-                    v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar
                 
-                  v-card-text
-                    v-expansion-panel(popout v-model="piezasExpansionPanel" expand)
-                      v-expansion-panel-content(v-for="(p, index) in piezas" :key="index" ripple )
-                        div(slot="header" )
-                          i.v-icon.material-icons(:style="'font-size: 16px; color:'+p.c") photo_size_select_actual
-                          strong  {{p.w}}x{{p.h}} cms [{{p.q}} piezas]
-                        v-card
-                          
-                          v-card-text
-                            v-layout
-                              v-flex: v-text-field(v-model="p.w" box type="number" label="Ancho (cm)" outline min="1")
-                              v-flex: v-text-field(v-model="p.h" box type="number" label="Alto (cm)" outline min="1")
-                              v-flex: v-text-field(v-model="p.q" box type="number" label="Cantidad" outline min="1")                              
-                            v-layout
-                              swatches(v-model="p.c" swatch-size="20" spacing-size="2" inline)
-                              v-flex: v-layout(column="true")
-                                v-btn(color="gray" outline small v-on:click="fillout(index)") Rellenar
-                                v-btn(color="red" outline v-if="index != 0" small v-on:click="deleteGraphic(index)") Eliminar
-              
-
-                v-card.mt-2
-                  v-toolbar(card)
-                    v-toolbar-title Acabados para {{material.tipo}}s
-                    v-spacer
-      
-                                 
-                    
-                  v-card-text(v-if="material.tipo == 'rigido'")
-                    v-checkbox(:label="'Margen para corte'" v-model="material.margen" color="red" )
-                    v-radio-group(label="Medianil" v-model="material.medianil" mandatory)
-                      v-layout
-                        v-radio(v-for="m in material.medianiles" :label="m.name" :value="m.value" color="red"  :key="m.name")
-                      
-                    
-                  v-card-text(v-if="material.tipo == 'flexible'")
-                    v-switch(label="Rebase perimetral (Jareta)" v-model="material.rebase" color="red")
-                    div(v-if="material.rebase")
-                      v-layout(align-center justify-center)
-                        v-btn-toggle(v-model="material.rebaseTipo" mandatory)
-                          v-btn(v-for="count in 3" :key="count" color="red" dark outline): v-icon(small :class="'icon-jareta_'+count")
-                      v-container
-                        template(v-if="material.rebaseTipo==0")
-                          v-layout
-                            v-flex: v-text-field(v-model="material.rebases.tb" label="Rebase (cm)" type="number" outline min="0")
-                            v-flex &nbsp;
-                            v-flex &nbsp;
-                            v-flex: v-text-field(v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" disabled)
-                            v-flex &nbsp;
-                            v-flex: v-text-field(v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" disabled)
-                        template(v-if="material.rebaseTipo==1")
-                          v-layout
-                            v-flex: v-text-field(v-model="material.rebases.lr" label="Rebase (cm)" type="number" outline min="0")
-                            v-flex &nbsp;
-                            v-flex &nbsp;
-                            v-flex: v-text-field(v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" disabled)
-                            v-flex &nbsp;
-                            v-flex: v-text-field(v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" disabled)
-                        template(v-if="material.rebaseTipo==2")
-                          v-layout
-                            v-flex: v-text-field(v-model="material.rebases.t" label="Superior (cm)" type="number" :append-icon="'border_top'" outline)
-                            v-flex: v-text-field(v-model="material.rebases.b" label="Inferior (cm)" type="number" :append-icon="'border_bottom'" outline)
-                          v-layout
-                            v-flex: v-text-field(v-model="material.rebases.l" label="Izquierdo (cm)" type="number" :append-icon="'border_left'" outline)
-                            v-flex: v-text-field(v-model="material.rebases.r" label="Derecho (cm)" type="number" :append-icon="'border_right'" outline)
-              
-              
-              
-              
-              
-              v-flex(xs12)
-                v-card.red.elevation-2
-                  v-card-text
-                    #visualizer {{visualizer}}
-                    v-tabs(dark slider-color="white" color="red darken-4" show-arrows)
-                      v-tab(v-for="(page, index) in paginas" :key="index" ripple) Hoja {{index+1}}
-                      v-tab-item(v-for="(page, index) in paginas" :key="index")   
-                        //p {{material.w_rendered}} x {{material.h_rendered}} | Medianil: {{material.medianil}}
-                        .svg-container
-                          .mat_w.caption {{material.w}} cm
-                          .mat_h.caption {{material.h}} cm
-                          
-                          
-                          
-                          svg(:view-box.camel="viewboxSize" :id="'page-'+index").rendered.elevation-4
-                            // MARGEN
-                            g(v-if="material.margen")
-                              rect(:width="material.w" height="1" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1")
-                              rect(:width="1" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1")
-                              rect(:width="material.w" height="1" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'")
-                              rect(:width="1" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'")
-                            //REBASE
-                            rect(:width="material.w" :height="material.rebases.t" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1").rebase-t  
-                            
-                            rect(:width="material.w" :height="material.rebases.b" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-material.rebases.b)+')'").rebase-b
-                            rect(:width="material.rebases.l" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1").rebase-l
-                            rect(:width="material.rebases.r" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate('+(material.w-material.rebases.r)+',0)'").rebase-r
-                            //GRAFICO
-                            g(v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'" )
-                              template(v-if="material.medianil == 0")
-                                rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.1)" stroke-width=".3" v-bind:stroke="g.c")
-                              template(v-if="material.medianil != 0")
-                                rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.1)" stroke-width=".1" stroke="#444" stroke-dasharray="3,3")
-                                rect(v-bind:width="g.w-(material.medianil*2)" v-bind:height="g.h-(material.medianil*2)" fill="rgba(255,255,255,0.1)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil+','+material.medianil+')'")
-                        
-                          
-                          //svg.rendered(:view-box.camel="viewboxSize" :id="'page-'+index").elevation-4
-                              g(v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'" )
-                                | {{g}}
-                                rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c" vector-effect="non-scaling-stroke")
-                          
-                          
-                          
-                          v-layout.resultado
-                            v-flex Ocupado: {{page.ocupado}} cm2
-                            v-flex Merma: {{(material.w_rendered*material.h_rendered)-page.ocupado}} cm2
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        //.svg-container
-                          .mat_w.caption {{material.w}} cm
-                          .mat_h.caption {{material.h}} cm
-                          svg.rendered(:view-box.camel="viewboxSize" :id="'page-'+index").elevation-4
-                            
-                            g(v-for="g in graficos" v-bind:transform="'translate('+g.x+','+g.y+')'" )
-                              | {{g}}
-                              rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(255,255,255,0.4)" stroke-width="1" v-bind:stroke="g.c" vector-effect="non-scaling-stroke")
-                          
-                      
-                      
-        v-footer(dark height="auto" tile).red.darken-4.pa-3
-          div Última modificación: #{new Date().toLocaleString()}
-          v-spacer
-          div Sinergia Publicitaria. {{ new Date().getFullYear() }}.
+        include modules/_footer.pug
+        
+        include modules/_changelog.pug
         
         v-dialog(v-model="dialog")
           v-card
             v-card-text
               v-alert(type="error" :value="true" outline) En construcción
+        
+        
               
+               
+               
+               
                
     script(src="//unpkg.com/vue/dist/vue.js")
     //script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
@@ -209,5 +52,6 @@ html(lang="es")
     script(src="//cdn.rawgit.com/yWorks/jsPDF/ee8bcea8/dist/jspdf.min.js")
     script(src="//cdn.rawgit.com/yWorks/svg2pdf.js/master/dist/svg2pdf.min.js")
     script(src="app/packer.js")
+    script(src="app/config.js")
     script(src="app/app.js")
             

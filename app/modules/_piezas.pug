@@ -1,0 +1,26 @@
+v-card.mt-2
+  v-toolbar(card)
+    v-toolbar-title Piezas
+    v-spacer
+    v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar
+
+  v-card-text
+    v-expansion-panel(popout v-model="piezasExpansionPanel" expand)
+      v-expansion-panel-content(v-for="(p, index) in piezas" :key="index" ripple )
+        div(slot="header" )
+          i.v-icon.material-icons(:style="'font-size: 16px; color:'+p.c") photo_size_select_actual
+          strong  {{p.w}}x{{p.h}} cms [{{p.q}} piezas]
+        v-card
+            v-container(grid-list-xs fluid)
+              v-layout
+                v-flex: v-text-field(v-model="p.w" box type="number" label="Ancho (cm)" min="1" color="red")
+                v-flex
+                  v-tooltip(top)
+                    span Invertir
+                    v-btn(slot="activator" icon color="red" flat v-on:click="rotateGraphic(index, p.w, p.h)"): v-icon rotate_90_degrees_ccw
+                v-flex: v-text-field(v-model="p.h" box type="number" label="Alto (cm)" min="1" color="red")
+              v-layout
+                v-flex: div.pt-1.text-md-center: swatches(v-model="p.c" swatch-size="20" spacing-size="2" popover-to="right")
+                v-flex: v-text-field(v-model="p.q"  type="number" label="Cantidad" min="1" box append-icon="view_quilt" @click:append="fillout(index)" hint="Click en el icono para autorellenar" color="red darken-4")                    
+              v-layout(outline v-if="index != 0")
+                v-flex: v-btn(color="red" small v-on:click="deleteGraphic(index)" outline) Eliminar

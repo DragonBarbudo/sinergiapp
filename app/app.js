@@ -1,35 +1,31 @@
-new Vue({
+var app = new Vue({
   el: '#app',
   components: {Swatches: window.VueSwatches.default},
   data: () => ({
+    drawer: true,
     dialog: false,
+    changelog: true,
+    activePage: 0,
+    db: configurations,
     material: {
-      w: 122,
-      h: 244,
+      w: 320,
+      h: 100,
       w_rendered: 0,
       h_rendered: 0,
       tipo: 'flexible',
-      rigidoElegido : 0,
+      rigidoElegido : { id: 0, w:122, h:244 },
+      flexibleElegido : {id:0, w: 320, t: 'Lona Front'},
+      hFlexible: 100,
       rebase: false,
       rebaseTipo: 0,
       rebases: { t:0, r:0, b:0, l:0, tb:0, lr:0},
       margen: false,
-      medianil: 0.0,
-      medianiles:[
-        {name: "0 mm", value:0.0},
-        {name:"3 mm", value:0.3},
-        {name:"5 mm", value:0.5}
-      ],
-      medidas:[
-        { id: 0, w:122, h:244 },
-        { id: 1, w:120, h:180 },
-        { id: 2, w:120, h:150 },
-        { id: 3, w:120, h:90 },
-      ]
+      medianil: {name: "0 mm", value:0.0},
+      pinza: true
     },
     piezasExpansionPanel : [],
     piezas: [
-      {w:40, h:40, q:11, c:"#C0382B"}
+      {w:60, h:30, q:11, c:"#C0382B"}
     ],
     blocks: [],
     graficos:[],
@@ -38,6 +34,7 @@ new Vue({
   methods: {
     downloadPDF : function(){
       this.dialog=true;
+      return false;
       var pdf = new jsPDF('l', 'cm', [this.material.w, this.material.h]);
       svg2pdf(document.getElementById('svg'), pdf, {
         xOffset: 0,
@@ -53,6 +50,10 @@ new Vue({
       this.piezas.splice(index, 1);
       this.piezasExpansionPanel = []
     },
+    rotateGraphic : function(index, w, h){
+      this.piezas[index].w = h;
+      this.piezas[index].h = w;
+    },
     fillout : function(index){
       var currentPages = this.paginas.length;
 
@@ -64,8 +65,23 @@ new Vue({
           this.piezas[index].q++;
         }
       }.bind(this), 10);
+    },
+    materialSize: function(value){
+
+      if(this.material.tipo=='flexible'){
+        this.material.w = this.material.flexibleElegido.w;
+        this.material.h = this.material.hFlexible;
+      }
+
+      if(this.material.tipo=='rigido'){
+        this.material.w = this.material.rigidoElegido.w;
+        this.material.h = this.material.rigidoElegido.h;
+      }
+
+
 
     }
+
   },
   computed : {
    viewboxSize: function(){
@@ -74,20 +90,36 @@ new Vue({
 
 
    visualizer : function(){
+     this.activePage=0;
 
-     //FULL RENDERED SIZES
-     //Margen para corte
      this.material.w_rendered = this.material.w;
      this.material.h_rendered = this.material.h;
-     if(this.material.margen){
-       this.material.w_rendered = this.material.w - 2;
-       this.material.h_rendered = this.material.h - 2;
-     }
-     //Rebase perimetral
 
+     if(this.material.tipo=='flexible'){
+
+       if(this.material.pinza){
+         this.material.w_rendered = this.material.w - 3;
+         this.material.h_rendered = this.material.h - 3;
+
+       }
+     } else if(this.material.tipo=='rigido'){
+       //Margen para corte
+
+       if(this.material.margen){
+         this.material.w_rendered = this.material.w - 2;
+         this.material.h_rendered = this.material.h - 2;
+       }
+       //Medianil
+     }
+
+
+
+
+     //Rebase perimetral
+/*
       this.material.w_rendered = this.material.w - this.material.rebases.l - this.material.rebases.r;
       this.material.h_rendered = this.material.h - this.material.rebases.t - this.material.rebases.b;
-
+*/
 
 
 
@@ -133,10 +165,12 @@ new Vue({
           var block = this.blocks[n];
           if(block.fit){ //FITS
             var theGraphic;
-            if(this.material.margen){
+            if(this.material.margen && this.material.tipo=='rigido'){
               theGraphic = { y:block.fit.y+1, x:block.fit.x+1, w:block.w, h:block.h, c:block.c };
+            } else if(this.material.pinza && this.material.tipo=='flexible'){
+              theGraphic = { y:block.fit.y+1.5, x:block.fit.x+1.5, w:block.w, h:block.h, c:block.c };
             } else {
-              theGraphic = { y:block.fit.y+this.material.rebases.t*1, x:block.fit.x+this.material.rebases.l*1, w:block.w, h:block.h, c:block.c };
+              theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
             }
             this.paginas[pageCount].graphics.push( theGraphic );
             this.graficos.push( theGraphic );
@@ -150,7 +184,7 @@ new Vue({
         }
 
 
-        if(temporals.length>0 && this.paginas[pageCount].graphics.length>0 && pageCount<10){
+        if(temporals.length>0 && this.paginas[pageCount].graphics.length>0 && pageCount<40){
           this.blocks = temporals;
           this.paginas[pageCount+1] = { graphics: [], ocupado:0 }
           temporals = [];
@@ -170,18 +204,11 @@ new Vue({
   watch: {
     material: {
         handler(val){
-          if(val.tipo == 'flexible'){
-            this.material.margen = false;
-            this.material.medianil = 0;
-          } else if(val.tipo == 'rigido'){
-            this.material.w = this.material.medidas[this.material.rigidoElegido].w;
-            this.material.h = this.material.medidas[this.material.rigidoElegido].h;
-          }
+
           if(this.material.rebaseTipo==0){
             this.material.rebases.l = 0;
             this.material.rebases.r = 0;
             this.material.rebases.lr = 0;
-
             this.material.rebases.t = val.rebases.tb;
             this.material.rebases.b = val.rebases.tb;
 
@@ -200,3 +227,7 @@ new Vue({
     }
   }
 })
+
+
+
+app.materialSize();

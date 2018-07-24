@@ -7,7 +7,7 @@
 		"uuidString": "F8E38A5E-C32B-41E8-82D4-6F943636B1A5"
 		}
 	],
-"creatorBuild": "26667",
+"creatorBuild": "26261",
 "files": {
 	"\/.gitattributes": {
 		"cB": 0,
@@ -60,6 +60,16 @@
 		"sM": 0,
 		"sU": 0
 		},
+	"\/app\/config.js": {
+		"ft": 64,
+		"ma": 0,
+		"mi": 0,
+		"oA": 1,
+		"oAP": "\/app\/config-min.js",
+		"oF": 0,
+		"sC": 0,
+		"tS": 0
+		},
 	"\/app\/fonts\/icomoon.eot": {
 		"cB": 0,
 		"ft": 8192,
@@ -91,6 +101,16 @@
 		"oAP": "\/app\/fonts\/icomoon.woff",
 		"oF": 0
 		},
+	"\/app\/img\/sapp.svg": {
+		"ft": 2097152,
+		"miP": 0,
+		"oA": 2,
+		"oAP": "\/app\/img\/sapp.svg",
+		"oF": 0,
+		"opt": 0,
+		"plM": 3758088159,
+		"prP": 0
+		},
 	"\/app\/index.pug": {
 		"cB": 0,
 		"cOD": 1,
@@ -98,6 +118,69 @@
 		"oA": 0,
 		"oAP": "\/app\/..\/index.html",
 		"oF": 2,
+		"oS": 0
+		},
+	"\/app\/modules\/_acabados.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_acabados.html",
+		"oF": 0,
+		"oS": 0
+		},
+	"\/app\/modules\/_changelog.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_changelog.html",
+		"oF": 0,
+		"oS": 0
+		},
+	"\/app\/modules\/_footer.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_footer.html",
+		"oF": 0,
+		"oS": 0
+		},
+	"\/app\/modules\/_material.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_material.html",
+		"oF": 0,
+		"oS": 0
+		},
+	"\/app\/modules\/_piezas.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_piezas.html",
+		"oF": 0,
+		"oS": 0
+		},
+	"\/app\/modules\/_toolbar.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_toolbar.html",
+		"oF": 0,
+		"oS": 0
+		},
+	"\/app\/modules\/_visualizador.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_visualizador.html",
+		"oF": 0,
 		"oS": 0
 		},
 	"\/app\/packer.js": {
@@ -126,8 +209,7 @@
 	"creationDate": 552423872,
 	"displayValue": "sinergiapp",
 	"displayValueWasSetByUser": 0,
-	"iconImageName": "meme-soon",
-	"iconImageWasSetByUser": 0
+	"iconImageName": "meme-soon"
 	},
 "projectSettings": {
 	"abortBuildOnError": 1,
@@ -135,7 +217,6 @@
 	"animateCSSInjections": 1,
 	"autoBuildNewItems": 1,
 	"autoprefixerBrowserString": "> 1%, last 2 versions, Firefox ESR, Opera 12.1",
-	"autoprefixerEnableIEGrid": 0,
 	"babelAuxiliaryCommentAfter": "",
 	"babelAuxiliaryCommentBefore": "",
 	"babelConfigFileHandlingType": 0,
@@ -1930,7 +2011,6 @@
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
 		"autoOutputPathStyle": 0,
-		"outputFormat": 0,
 		"quality": 100
 		},
 	"languageDefaultsJS": {

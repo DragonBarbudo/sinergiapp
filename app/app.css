@@ -34,7 +34,6 @@
 }
 .svg-container .mat_w,
 .svg-container .mat_h {
-  color: #fff;
   position: absolute;
 }
 .svg-container .mat_w {
@@ -49,13 +48,11 @@
   text-align: right;
   min-width: 100px;
 }
-.svg-container .resultado {
-  color: #fff;
-}
 svg.rendered {
+  outline: 1px solid #aaa;
   width: 90%;
+  max-height: 6000px;
   margin: 5%;
-  background: #fff;
 }
 #visualizer {
   display: none;

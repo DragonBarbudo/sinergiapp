@@ -1,0 +1,7 @@
+v-toolbar(dark dense fixed clipped-left app).red.darken-4
+  v-toolbar-side-icon(@click.stop="drawer = !drawer")
+    v-icon.mx-3 menu
+  v-toolbar-title Sinergia Publicitaria
+  v-spacer
+  v-toolbar-items
+    v-btn(v-on:click="downloadPDF" flat) Descargar PDF

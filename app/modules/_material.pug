@@ -1,0 +1,39 @@
+v-card.mb-2
+  v-toolbar(card)
+    v-toolbar-title Material
+    v-spacer
+
+    v-btn-toggle(v-model="material.tipo" mandatory @change="materialSize")
+      v-btn(value="flexible" color="red" dark outline)
+        span Flexible
+        v-icon aspect_ratio
+      v-btn(value="rigido" color="red" dark  outline)
+        span Rígido
+        v-icon settings_overscan
+
+    
+  v-container(grid-list-xs fluid)
+  
+    
+    
+    //FLEXIBLE
+    v-layout(row wrap v-if="material.tipo=='flexible'")
+      v-flex(xs6)
+        v-select(:items="db.flexibles" v-model="material.flexibleElegido" box label="Ancho (cm)" item-text="`${data.item.id}, ${data.item.w}`" dense persistent-hint :hint="`${material.flexibleElegido.t}`" color="red" @change="materialSize")
+          template(slot="selection" slot-scope="data") {{data.item.w}}
+          template(slot="item" slot-scope="data")
+            v-list-tile-content 
+              v-list-tile-title(v-html="`${data.item.w} cm`")
+              v-list-tile-sub-title(v-html="data.item.t")
+      v-flex(xs6)
+        v-text-field(v-model="material.hFlexible" label="Alto (cm)" min="5" max="10000" required type="number" box hide-details @input="materialSize" color="red")
+    
+    //RIGIDO
+  
+    v-layout(v-if="material.tipo == 'rigido'" align-center justify-center).mb-2
+      
+      v-select(:items="db.rigidos" v-model="material.rigidoElegido" box label="Ancho x Alto (cm)" item-text="`${data.item.w}, ${data.item.h}`" color="red" @change="materialSize")
+        template(slot="selection" slot-scope="data") {{ data.item.w}} x {{data.item.h}} cm
+        template(slot="item" slot-scope="data")
+          v-list-tile-content
+            v-list-tile-title(v-html="`${data.item.w} x ${data.item.h} cm`")
