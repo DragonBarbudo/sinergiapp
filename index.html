@@ -200,9 +200,11 @@
           </v-toolbar-side-icon>
           <v-toolbar-title>Sinergia Publicitaria</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn v-on:click="downloadPDF" flat>Descargar PDF</v-btn>
-          </v-toolbar-items>
+          <v-tooltip bottom><span>Descargar como PDF</span>
+            <v-btn v-on:click="downloadPDF" slot="activator" icon>
+              <v-icon>picture_as_pdf</v-icon>
+            </v-btn>
+          </v-tooltip>
         </v-toolbar>
         <v-content>
           <v-container>
@@ -272,11 +274,11 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-7-24 16:36:17</div>
+          <div>Última modificación: 2018-7-24 16:39:36</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
-        <v-dialog v-model="changelog" max-width="600">
+        <v-dialog v-model="changelog" max-width="400">
           <v-card>
             <v-card-title primary-title>
               <h3>Pendientes</h3>
