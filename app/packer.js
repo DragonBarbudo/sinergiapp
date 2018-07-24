@@ -3,7 +3,6 @@ Packer = function(w, h) {
 };
 
 Packer.prototype = {
-
   init: function(w, h) {
     this.root = { x: 0, y: 0, w: w, h: h };
   },

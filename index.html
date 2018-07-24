@@ -265,23 +265,34 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-7-24 16:24:26</div>
+          <div>Última modificación: 2018-7-24 16:26:48</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
         <v-dialog v-model="changelog" max-width="600">
           <v-card>
             <v-card-title primary-title>
+              <h3>Pendientes</h3>
+            </v-card-title>
+            <v-card-text>
+              <ul>
+                <li>Botón de descarga.</li>
+                <li>Preloader en muchas piezas.</li>
+                <li>Mejorar algoritmo de acomodo.</li>
+              </ul>
+            </v-card-text>
+            <v-card-title primary-title>
               <h3>Changelog</h3>
             </v-card-title>
             <v-card-text>
               <ul>
-                <li>Flexible: Pinza añadida</li>
-                <li>Tabs: Al modificar muestra la primer hoja</li>
-                <li>Piezas: Boton para rotar/invertir</li>
-                <li>Piezas: Modificación UI de cantidad</li>
-                <li>Flexibles: El Visualizador se escala para limitar el alto de la página</li>
-                <li>Flexibles y Rigidos: Almacena la última medida ingresada al cambiar tipo de material</li>
+                <li>Flexible: Rebase perimetral corregido. Por pieza.</li>
+                <li>Flexible: Pinza añadida.</li>
+                <li>Tabs: Al modificar muestra la primer hoja.</li>
+                <li>Piezas: Boton para rotar/invertir.</li>
+                <li>Piezas: Modificación UI de cantidad.</li>
+                <li>Flexibles: El Visualizador se escala para limitar el alto de la página.</li>
+                <li>Flexibles y Rigidos: Almacena la última medida ingresada al cambiar tipo de material.</li>
                 <li>General: Configuración en slide izquierdo.</li>
                 <li>Rigidos: Cambio de UI en tamaños</li>
                 <li>Flexibles: Altura Min 5, Max 10'000.</li>
