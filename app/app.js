@@ -2,7 +2,7 @@ var app = new Vue({
   el: '#app',
   components: {Swatches: window.VueSwatches.default},
   data: () => ({
-    drawer: true,
+    drawer: false,
     dialog: false,
     changelog: true,
     activePage: 0,
