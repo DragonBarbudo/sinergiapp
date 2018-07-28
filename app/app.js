@@ -25,7 +25,7 @@ var app = new Vue({
     },
     piezasExpansionPanel : [],
     piezas: [
-      {w:60, h:30, q:11, c:"#C0382B"}
+      {w:60, h:30, q:4, c:"#C0382B"},
     ],
     blocks: [],
     graficos:[],
@@ -77,11 +77,7 @@ var app = new Vue({
         this.material.w = this.material.rigidoElegido.w;
         this.material.h = this.material.rigidoElegido.h;
       }
-
-
-
     }
-
   },
   computed : {
    viewboxSize: function(){
@@ -115,18 +111,6 @@ var app = new Vue({
 
 
 
-     //Rebase perimetral
-/*
-      this.material.w_rendered = this.material.w - this.material.rebases.l - this.material.rebases.r;
-      this.material.h_rendered = this.material.h - this.material.rebases.t - this.material.rebases.b;
-*/
-
-
-
-
-
-
-
      var pageCount = 0;
      var temporals = [];
 
@@ -143,7 +127,25 @@ var app = new Vue({
      //Convert pieces to individual graphics and store'em in blocks
      for(var p = 0; p<this.piezas.length; p++){
        for(var pi = 0; pi<this.piezas[p].q; pi++){
-         this.blocks.push( { w: this.piezas[p].w*1, h:this.piezas[p].h*1, c: this.piezas[p].c, } );
+         var extraW = 0;
+         var extraH = 0;
+         //RIGIDO > MEDIANIL
+         if(this.material.tipo=='rigido'){
+           extraW = this.material.medianil.value*2;
+           extraH = this.material.medianil.value*2
+         }
+         //FLEXIBLE > REBASE
+         if(this.material.tipo=='flexible'){
+           extraW = (parseFloat(this.material.rebases.l) + parseFloat(this.material.rebases.r));
+           extraH = (parseFloat(this.material.rebases.t) + parseFloat(this.material.rebases.b));
+         }
+         var finalPiece = {
+           w: parseFloat(this.piezas[p].w) + parseFloat(extraW),
+           h: parseFloat(this.piezas[p].h) + parseFloat(extraH),
+           c: this.piezas[p].c
+         };
+         this.blocks.push( finalPiece );
+
        }
      }
 
@@ -152,10 +154,16 @@ var app = new Vue({
      var endVizualizer = false;
      while(!endVizualizer){
 
+
+
         //Define packer container
         var packer = new Packer(this.material.w_rendered, this.material.h_rendered);
         //Sort each block > biggest to smallest
-        this.blocks = this.blocks.sort(function(a,b) { return (b.h < a.h); });
+        //this.blocks.sort(function(a,b) { return (b.h < a.h); });
+        this.blocks.sort(function(a,b) { return (b.w < a.w); });
+
+
+
         //Sort inside the packer area
         packer.fit(this.blocks);
 
@@ -164,7 +172,35 @@ var app = new Vue({
         for(var n = 0; n<this.blocks.length; n++){
           var block = this.blocks[n];
           if(block.fit){ //FITS
+
             var theGraphic;
+
+            var gY = block.fit.y;
+            var gX = block.fit.x;
+
+            if(this.material.tipo=='rigido'){
+              //Margen
+                if(this.material.margen){
+                  gY+=1;
+                  gX+=1;
+                }
+            } else if(this.material.tipo=='flexible'){
+              //Pinza
+              if(this.material.pinza){
+                gY+=1.5;
+                gX+=1.5;
+              }
+            }
+
+            theGraphic = {
+              y: gY,
+              x: gX,
+              w: block.w,
+              h: block.h,
+              c: block.c
+            };
+
+            /*
             if(this.material.margen && this.material.tipo=='rigido'){
               theGraphic = { y:block.fit.y+1, x:block.fit.x+1, w:block.w, h:block.h, c:block.c };
             } else if(this.material.pinza && this.material.tipo=='flexible'){
@@ -172,8 +208,13 @@ var app = new Vue({
             } else {
               theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
             }
+            */
+
+
+
+
             this.paginas[pageCount].graphics.push( theGraphic );
-            this.graficos.push( theGraphic );
+            //this.graficos.push( theGraphic );
             this.paginas[pageCount].ocupado+= block.w * block.h;
           }
           else { //DOESNT FITS... new page
@@ -193,7 +234,22 @@ var app = new Vue({
           endVizualizer = true;
         }
 
-      }
+
+
+
+
+      }//for of pages
+
+
+
+
+
+
+
+
+
+
+
 
 
 

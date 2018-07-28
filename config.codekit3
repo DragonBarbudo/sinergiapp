@@ -165,6 +165,15 @@
 		"oF": 0,
 		"oS": 0
 		},
+	"\/app\/modules\/_svg.pug": {
+		"cB": 0,
+		"cOD": 1,
+		"ft": 512,
+		"oA": 1,
+		"oAP": "\/app\/modules\/_svg.html",
+		"oF": 0,
+		"oS": 0
+		},
 	"\/app\/modules\/_toolbar.pug": {
 		"cB": 0,
 		"cOD": 1,

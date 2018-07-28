@@ -260,11 +260,11 @@
                           </template>
                         </g>
                       </svg>
-                      <v-layout class="resultado">
-                        <v-flex>Ocupado: {{page.ocupado}} cm2</v-flex>
-                        <v-flex>Merma: {{(material.w_rendered*material.h_rendered)-page.ocupado}} cm2</v-flex>
-                      </v-layout>
                     </div>
+                    <v-layout class="resultado">
+                      <v-flex>Ocupado: {{page.ocupado}} cm2</v-flex>
+                      <v-flex>Merma: {{(material.w_rendered*material.h_rendered)-page.ocupado}} cm2</v-flex>
+                    </v-layout>
                   </v-tab-item>
                 </v-tabs>
               </v-card-text>
@@ -272,7 +272,7 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-7-24 16:46:46</div>
+          <div>Última modificación: 2018-7-27 19:06:33</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
@@ -285,13 +285,17 @@
               <ul>
                 <li>Botón de descarga.</li>
                 <li>Preloader en muchas piezas.</li>
-                <li>Mejorar algoritmo de acomodo.</li>
               </ul>
             </v-card-text>
             <v-card-title primary-title>
               <h3>Changelog</h3>
             </v-card-title>
             <v-card-text>
+              <ul>
+                <li>Corrección en rebase y medianil. Antes restaba, ahora aumenta.</li>
+                <li>Mejora en algoritmo de acomodo.</li>
+              </ul>
+              <v-divider></v-divider>
               <ul>
                 <li>Flexible: Modificación de UI en rebase.</li>
                 <li>Flexible: Rebase perimetral corregido. Por pieza.</li>
