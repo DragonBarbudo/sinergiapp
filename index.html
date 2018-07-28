@@ -24,16 +24,22 @@
           </v-toolbar>
           <v-card class="mb-2">
             <v-toolbar card>
-              <v-toolbar-title>Material</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn-toggle v-model="material.tipo" mandatory @change="materialSize">
                 <v-btn value="flexible" color="red" dark outline><span>Flexible</span>
-                  <v-icon>aspect_ratio</v-icon>
+                  <!--v-icon aspect_ratio-->
+                  <v-icon class="icon-flexible"></v-icon>
                 </v-btn>
                 <v-btn value="rigido" color="red" dark outline><span>Rígido</span>
-                  <v-icon>settings_overscan</v-icon>
+                  <!--v-icon settings_overscan-->
+                  <v-icon class="icon-rigido"></v-icon>
+                </v-btn>
+                <v-btn value="plotter" color="red" dark outline><span>Plotter</span>
+                  <!--v-icon settings_overscan-->
+                  <v-icon class="icon-plotter"></v-icon>
                 </v-btn>
               </v-btn-toggle>
+              <v-spacer></v-spacer>
             </v-toolbar>
             <v-container grid-list-xs fluid>
               <!--FLEXIBLE-->
@@ -134,7 +140,7 @@
                 <v-layout align-center justify-center>
                   <v-btn-toggle v-model="material.rebaseTipo" mandatory>
                     <v-btn v-for="count in 3" :key="count" color="red" dark outline>
-                      <v-icon small :class="'icon-jareta_'+count"></v-icon>
+                      <v-icon small :class="'icon-rebase-'+count"></v-icon>
                     </v-btn>
                   </v-btn-toggle>
                 </v-layout>
@@ -272,7 +278,7 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-7-27 19:06:33</div>
+          <div>Última modificación: 2018-7-28 08:53:59</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
@@ -297,6 +303,7 @@
               </ul>
               <v-divider></v-divider>
               <ul>
+                <li>Iconos modificados</li>
                 <li>Flexible: Modificación de UI en rebase.</li>
                 <li>Flexible: Rebase perimetral corregido. Por pieza.</li>
                 <li>Flexible: Pinza añadida.</li>

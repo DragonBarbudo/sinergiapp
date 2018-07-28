@@ -20,7 +20,7 @@ v-card.mt-2
     div(v-if="material.rebase")
       v-layout(align-center justify-center)
         v-btn-toggle(v-model="material.rebaseTipo" mandatory)
-          v-btn(v-for="count in 3" :key="count" color="red" dark outline): v-icon(small :class="'icon-jareta_'+count")
+          v-btn(v-for="count in 3" :key="count" color="red" dark outline): v-icon(small :class="'icon-rebase-'+count")
       v-container(grid-list-md fluid)
         template(v-if="material.rebaseTipo==0")
           v-layout

@@ -1,16 +1,21 @@
 v-card.mb-2
   v-toolbar(card)
-    v-toolbar-title Material
     v-spacer
 
     v-btn-toggle(v-model="material.tipo" mandatory @change="materialSize")
       v-btn(value="flexible" color="red" dark outline)
         span Flexible
-        v-icon aspect_ratio
+        //v-icon aspect_ratio
+        v-icon.icon-flexible
       v-btn(value="rigido" color="red" dark  outline)
         span Rígido
-        v-icon settings_overscan
-
+        //v-icon settings_overscan
+        v-icon.icon-rigido
+      v-btn(value="plotter" color="red" dark  outline)
+        span Plotter
+        //v-icon settings_overscan
+        v-icon.icon-plotter
+    v-spacer
     
   v-container(grid-list-xs fluid)
   
