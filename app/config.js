@@ -26,5 +26,10 @@ var configurations = {
     { divider: true },
     {id:9, w: 137, t: 'Vinil estático'},
     {id:10, w: 150, t: 'Vinil estático'},
-  ]
+  ],
+  plotters: [
+    { id: 0, w: 60 },
+    { id: 0, w: 120 }
+  ],
+
 };

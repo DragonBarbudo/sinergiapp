@@ -1,10 +1,17 @@
 v-card.mt-2
   v-toolbar(card)
-    v-toolbar-title Acabados para {{material.tipo}}s
+    v-toolbar-title Acabados para {{material.tipo}}
     v-spacer
 
 
 
+  
+  v-card-text(v-if="material.tipo == 'plotter'")
+    v-checkbox(:label="'Guía Pre Corte'" v-model="material.guiaCorte" color="red" @change="materialSize")
+
+  
+  
+  
   v-card-text(v-if="material.tipo == 'rigido'")
     v-checkbox(:label="'Margen para corte'" v-model="material.margen" color="red" )
 

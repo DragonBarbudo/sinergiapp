@@ -70,6 +70,27 @@
                   </template>
                 </v-select>
               </v-layout>
+              <v-layout v-if="material.tipo == 'plotter'">
+                <v-flex xs6 v-if="!material.guiaCorte">
+                  <v-select :items="db.plotters" v-model="material.plotterElegido" box label="Ancho (cm)" item-text="`${data.item.w}`" color="red" @change="materialSize">
+                    <template slot="selection" slot-scope="data">{{data.item.w}} cm</template>
+                    <template slot="item" slot-scope="data">
+                      <v-list-tile-content>
+                        <v-list-tile-title v-html="`${data.item.w} cm`"></v-list-tile-title>
+                      </v-list-tile-content>
+                    </template>
+                  </v-select>
+                </v-flex>
+                <v-flex xs6 v-if="!material.guiaCorte">
+                  <v-text-field v-model="material.hPlotter" label="Alto (cm)" min="100" max="3000" required type="number" box hide-details @input="materialSize" color="red"></v-text-field>
+                </v-flex>
+                <v-flex xs6 v-if="material.guiaCorte">
+                  <v-text-field value="120" label="Ancho (cm)" box hide-details @input="materialSize" color="red" disabled></v-text-field>
+                </v-flex>
+                <v-flex xs6 v-if="material.guiaCorte">
+                  <v-text-field value="180" label="Alto (cm)" box hide-details @input="materialSize" color="red" disabled></v-text-field>
+                </v-flex>
+              </v-layout>
             </v-container>
           </v-card>
           <v-card class="mt-2">
@@ -122,9 +143,12 @@
           </v-card>
           <v-card class="mt-2">
             <v-toolbar card>
-              <v-toolbar-title>Acabados para {{material.tipo}}s</v-toolbar-title>
+              <v-toolbar-title>Acabados para {{material.tipo}}</v-toolbar-title>
               <v-spacer></v-spacer>
             </v-toolbar>
+            <v-card-text v-if="material.tipo == 'plotter'">
+              <v-checkbox :label="'Guía Pre Corte'" v-model="material.guiaCorte" color="red" @change="materialSize"></v-checkbox>
+            </v-card-text>
             <v-card-text v-if="material.tipo == 'rigido'">
               <v-checkbox :label="'Margen para corte'" v-model="material.margen" color="red"></v-checkbox>
               <v-radio-group label="Medianil: " v-model="material.medianil" mandatory row>
@@ -215,6 +239,16 @@
             <v-card class="blue-grey lighten-3">
               <v-card-text>
                 <div id="visualizer">{{visualizer}}</div>
+                <v-container fluid>
+                  <v class="layout" row wrap>
+                    <v-flex>
+                      <v-spacer></v-spacer>
+                    </v-flex>
+                    <v-flex class="text-lg-right">
+                      <v-switch label="Vista" prepend-icon="view_module" v-model="viewgrid" color="red"></v-switch>
+                    </v-flex>
+                  </v>
+                </v-container>
                 <v-tabs dark slider-color="white" color="red darken-4" show-arrows v-model="activePage">
                   <v-tab v-for="(page, index) in paginas" :key="index" ripple>Hoja {{index+1}}</v-tab>
                   <v-tab-item v-for="(page, index) in paginas" :key="index">
@@ -225,43 +259,49 @@
                         <rect class="elevation-4" :width="material.w" :height="material.h" stroke-width=".1" stroke="#eee" fill="#fff"></rect>
                         <!-- MARGEN-->
                         <g v-if="material.margen &amp;&amp; material.tipo=='rigido'">
-                          <rect :width="material.w" height="1" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"></rect>
-                          <rect :width="1" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"></rect>
-                          <rect :width="material.w" height="1" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'"></rect>
-                          <rect :width="1" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'"></rect>
+                          <rect :width="material.w" height="1" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1"></rect>
+                          <rect :width="1" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1"></rect>
+                          <rect :width="material.w" height="1" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'"></rect>
+                          <rect :width="1" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'"></rect>
                         </g>
                         <!-- PINZA-->
                         <g v-if="material.pinza &amp;&amp; material.tipo=='flexible'">
-                          <rect :width="material.w" height="1.5" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"></rect>
-                          <rect :width="1.5" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1"></rect>
-                          <rect :width="material.w" height="1.5" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'"></rect>
-                          <rect :width="1.5" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'"></rect>
+                          <rect :width="material.w" height="1.5" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1"></rect>
+                          <rect :width="1.5" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1"></rect>
+                          <rect :width="material.w" height="1.5" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'"></rect>
+                          <rect :width="1.5" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'"></rect>
                         </g>
-                        <!--REBASE-->
-                        <!--
-                        rect(:width="material.w" :height="material.rebases.t" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1").rebase-t
-                        rect(:width="material.w" :height="material.rebases.b" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-material.rebases.b)+')'").rebase-b
-                        rect(:width="material.rebases.l" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1").rebase-l
-                        rect(:width="material.rebases.r" :height="material.h" stroke-width=".2" stroke="#000" fill="#fff" stroke-dasharray="1,1" :transform="'translate('+(material.w-material.rebases.r)+',0)'").rebase-r
-                        
-                        
-                        -->
+                        <!-- GUIA P CORTE-->
+                        <g v-if="material.guiaCorte &amp;&amp; material.tipo=='plotter'">
+                          <rect :width="material.w" :height="plotterGh" fill="#d2dfe7"></rect>
+                          <rect :width="plotterGw" :height="material.h" fill="#d2dfe7"></rect>
+                          <rect :width="material.w" :height="plotterGh" fill="#d2dfe7" :transform="'translate(0,'+(material.h-plotterGh)+')'"></rect>
+                          <rect :width="plotterGw" :height="material.h" fill="#d2dfe7" :transform="'translate('+(material.w-plotterGw)+',0)'"></rect>
+                          <line :x1="plotterGw" :x2="material.w-plotterGw" :y1="plotterGh" :y2="plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1">//T</line>
+                          <line :x1="plotterGw" :x2="material.w-plotterGw" :y1="material.h-plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1">//B</line>
+                          <line :x1="plotterGw" :x2="plotterGw" :y1="plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1">//L</line>
+                          <line :x1="material.w-plotterGw" :x2="material.w-plotterGw" :y1="plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1">//R</line>
+                        </g>
                         <!--GRAFICO-->
                         <g v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'">
                           <template v-if="material.tipo=='flexible'">
                             <!--Rebases-->
                             <!--T-->
-                            <rect :width="g.w" :height="material.rebases.t" fill="rgba(0,0,0,0.2)" stroke-width=".1" stroke="#444" stroke-dasharray="3,3"></rect>
+                            <rect :width="g.w" :height="material.rebases.t" fill="rgba(0,0,0,0.2)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
                             <!--B-->
-                            <rect :width="g.w" :height="material.rebases.b" fill="rgba(0,0,0,0.2)" :transform="'translate(0,'+(g.h-material.rebases.b)+' )'" stroke-width=".1" stroke="#444" stroke-dasharray="3,3"></rect>
+                            <rect :width="g.w" :height="material.rebases.b" fill="rgba(0,0,0,0.2)" :transform="'translate(0,'+(g.h-material.rebases.b)+' )'" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
                             <!--L-->
-                            <rect :width="material.rebases.l" :height="g.h" fill="rgba(10,10,10,0.1)" stroke-width=".1" stroke="#888" stroke-dasharray="3,3"></rect>
+                            <rect :width="material.rebases.l" :height="g.h" fill="rgba(10,10,10,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
                             <!--R-->
-                            <rect :width="material.rebases.r" :height="g.h" fill="rgba(10,10,10,0.1)" :transform="'translate('+(g.w-material.rebases.r)+', 0)'" stroke-width=".1" stroke="#888" stroke-dasharray="3,3"></rect>
+                            <rect :width="material.rebases.r" :height="g.h" fill="rgba(10,10,10,0.1)" :transform="'translate('+(g.w-material.rebases.r)+', 0)'" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
                             <rect :width="g.w-material.rebases.l-material.rebases.r" :height="g.h-material.rebases.t-material.rebases.b" fill="rgba(255,255,255,0.1)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.rebases.l+','+material.rebases.t+')'"></rect>
                           </template>
                           <template v-if="material.tipo=='rigido'">
-                            <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(0,0,0,0.1)" stroke-width=".1" stroke="#444" stroke-dasharray="3,3"></rect>
+                            <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(0,0,0,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
+                            <rect v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" fill="#fff" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'"></rect>
+                          </template>
+                          <template v-if="material.tipo=='plotter'">
+                            <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(0,0,0,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
                             <rect v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" fill="#fff" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'"></rect>
                           </template>
                         </g>
@@ -278,7 +318,7 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-7-28 08:53:59</div>
+          <div>Última modificación: 2018-8-23 09:29:20</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
@@ -289,6 +329,7 @@
             </v-card-title>
             <v-card-text>
               <ul>
+                <li>Falta información para Plotter</li>
                 <li>Botón de descarga.</li>
                 <li>Preloader en muchas piezas.</li>
               </ul>
@@ -298,12 +339,12 @@
             </v-card-title>
             <v-card-text>
               <ul>
+                <li>Iconos modificados</li>
                 <li>Corrección en rebase y medianil. Antes restaba, ahora aumenta.</li>
                 <li>Mejora en algoritmo de acomodo.</li>
               </ul>
               <v-divider></v-divider>
               <ul>
-                <li>Iconos modificados</li>
                 <li>Flexible: Modificación de UI en rebase.</li>
                 <li>Flexible: Rebase perimetral corregido. Por pieza.</li>
                 <li>Flexible: Pinza añadida.</li>

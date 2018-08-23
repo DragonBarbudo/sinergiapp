@@ -2,33 +2,40 @@ var app = new Vue({
   el: '#app',
   components: {Swatches: window.VueSwatches.default},
   data: () => ({
-    drawer: false,
+    drawer: true,
     dialog: false,
-    changelog: true,
+    changelog: false,
     activePage: 0,
+    pageCount : 0,
+    temporals : [],
+    runningVizualizer: true,
     db: configurations,
+    plotterGw: 8,
+    plotterGh: 28,
     material: {
       w: 320,
       h: 100,
       w_rendered: 0,
       h_rendered: 0,
-      tipo: 'flexible',
+      tipo: 'plotter',
       rigidoElegido : { id: 0, w:122, h:244 },
       flexibleElegido : {id:0, w: 320, t: 'Lona Front'},
+      plotterElegido: { id:0, w: 60 },
       hFlexible: 100,
+      hPlotter : 100,
       rebase: false,
       rebaseTipo: 0,
       rebases: { t:0, r:0, b:0, l:0, tb:0, lr:0},
       margen: false,
       medianil: {name: "0 mm", value:0.0},
-      pinza: true
+      pinza: true,
+      guiaCorte : false
     },
     piezasExpansionPanel : [],
     piezas: [
       {w:60, h:30, q:4, c:"#C0382B"},
     ],
     blocks: [],
-    graficos:[],
     paginas : [{}]
   }),
   methods: {
@@ -77,6 +84,17 @@ var app = new Vue({
         this.material.w = this.material.rigidoElegido.w;
         this.material.h = this.material.rigidoElegido.h;
       }
+
+      if(this.material.tipo=='plotter'){
+
+        if(this.material.guiaCorte){
+          this.material.w = 120;
+          this.material.h = 180;
+        } else {
+          this.material.h = this.material.hPlotter;
+          this.material.w = this.material.plotterElegido.w;
+        }
+      }
     }
   },
   computed : {
@@ -86,30 +104,30 @@ var app = new Vue({
 
 
    visualizer : function(){
+
+
+
      this.activePage=0;
 
      this.material.w_rendered = this.material.w;
      this.material.h_rendered = this.material.h;
-
      if(this.material.tipo=='flexible'){
-
        if(this.material.pinza){
          this.material.w_rendered = this.material.w - 3;
          this.material.h_rendered = this.material.h - 3;
-
        }
      } else if(this.material.tipo=='rigido'){
        //Margen para corte
-
        if(this.material.margen){
          this.material.w_rendered = this.material.w - 2;
          this.material.h_rendered = this.material.h - 2;
        }
-       //Medianil
+     } else if(this.material.tipo == 'plotter'){
+       if(this.material.guiaCorte){
+         this.material.w_rendered = this.material.w - 16;
+         this.material.h_rendered = this.material.h - 56;
+       }
      }
-
-
-
 
      var pageCount = 0;
      var temporals = [];
@@ -190,6 +208,12 @@ var app = new Vue({
                 gY+=1.5;
                 gX+=1.5;
               }
+            } else if(this.material.tipo=='plotter'){
+              //Guía para corte
+              if(this.material.guiaCorte){
+                gY+=this.plotterGh;
+                gX+=this.plotterGw;
+              }
             }
 
             theGraphic = {
@@ -199,18 +223,6 @@ var app = new Vue({
               h: block.h,
               c: block.c
             };
-
-            /*
-            if(this.material.margen && this.material.tipo=='rigido'){
-              theGraphic = { y:block.fit.y+1, x:block.fit.x+1, w:block.w, h:block.h, c:block.c };
-            } else if(this.material.pinza && this.material.tipo=='flexible'){
-              theGraphic = { y:block.fit.y+1.5, x:block.fit.x+1.5, w:block.w, h:block.h, c:block.c };
-            } else {
-              theGraphic = { y:block.fit.y, x:block.fit.x, w:block.w, h:block.h, c:block.c };
-            }
-            */
-
-
 
 
             this.paginas[pageCount].graphics.push( theGraphic );
