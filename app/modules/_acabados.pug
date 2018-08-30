@@ -7,8 +7,12 @@ v-card.mt-2
 
   
   v-card-text(v-if="material.tipo == 'plotter'")
-    v-checkbox(:label="'Guía Pre Corte'" v-model="material.guiaCorte" color="red" @change="materialSize")
-
+    v-tooltip(top)
+      span La pinza de 1.5 cm es obligatoria en Plotter
+      v-checkbox(:label="'Pinza'" slot="activator" v-model="material.pinza" color="red" disabled)
+    v-checkbox(:label="'Impresión con pre-corte'" v-model="material.guiaCorte" color="red" @change="materialSize")
+    v-radio-group(label="Medianil: " v-model="material.medianilPlotter" mandatory row)
+      v-radio(v-for="m in db.medianiles" :label="m.name" :value="m" color="red" :key="m.name")
   
   
   

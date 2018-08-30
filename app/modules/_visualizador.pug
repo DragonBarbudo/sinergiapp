@@ -1,12 +1,11 @@
 v-card.blue-grey.lighten-3
   v-card-text
     #visualizer {{visualizer}}
-    v-container(fluid)
-      v.layout(row wrap)
-        v-flex: v-spacer
-        v-flex.text-lg-right: v-switch(label="Vista" prepend-icon="view_module" v-model="viewgrid" color="red")
-    v-tabs(dark slider-color="white" color="red darken-4" show-arrows v-model="activePage")
-      v-tab(v-for="(page, index) in paginas" :key="index" ripple) Hoja {{index+1}}
+    
+
+    v-tabs(dark slider-color="white" color="red darken-4" show-arrows v-model="activePage" v-bind:class="{ asGRID: viewgrid }")
+      
+      v-tab(v-for="(page, index) in paginas" :key="index" ripple) P.{{index+1}}
       
       v-tab-item(v-for="(page, index) in paginas" :key="index")
           include _svg

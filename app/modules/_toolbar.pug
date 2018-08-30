@@ -3,6 +3,17 @@ v-toolbar(dark dense fixed clipped-left app).red.darken-4
     v-icon.mx-3 menu
   v-toolbar-title Sinergia Publicitaria
   v-spacer
+  
+  v-tooltip(bottom)
+    span Cambiar vista
+    v-btn(v-on:click="changeView" slot="activator" icon)
+      v-icon(v-if="!viewgrid") view_module
+      v-icon(v-if="viewgrid") view_carousel
+  
   v-tooltip(bottom)
     span Descargar como PDF
     v-btn(v-on:click="downloadPDF" slot="activator" icon): v-icon picture_as_pdf
+
+  v-tooltip(bottom)
+    span Información
+    v-btn(v-on:click="changelog=true" slot="activator" icon): v-icon info

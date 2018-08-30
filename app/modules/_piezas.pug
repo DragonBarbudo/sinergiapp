@@ -2,25 +2,54 @@ v-card.mt-2
   v-toolbar(card)
     v-toolbar-title Piezas
     v-spacer
-    v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar
+    //v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar
+    v-btn(color="red" fab absolute right dark small v-on:click="addGraphic" icon): v-icon add 
 
   v-card-text
     v-expansion-panel(popout v-model="piezasExpansionPanel" expand)
       v-expansion-panel-content(v-for="(p, index) in piezas" :key="index" ripple )
         div(slot="header" )
+          
           i.v-icon.material-icons(:style="'font-size: 16px; color:'+p.c") photo_size_select_actual
           strong  {{p.w}}x{{p.h}} cms [{{p.q}} piezas]
+          span(style="display:none;") {{p.parent = index}}
         v-card
             v-container(grid-list-xs fluid)
               v-layout
                 v-flex: v-text-field(v-model="p.w" box type="number" label="Ancho (cm)" min="1" color="red")
                 v-flex
                   v-tooltip(top)
-                    span Invertir
+                    span Girar pieza
                     v-btn(slot="activator" icon color="red" flat v-on:click="rotateGraphic(index, p.w, p.h)"): v-icon rotate_90_degrees_ccw
                 v-flex: v-text-field(v-model="p.h" box type="number" label="Alto (cm)" min="1" color="red")
               v-layout
-                v-flex: div.pt-1.text-md-center: swatches(v-model="p.c" swatch-size="20" spacing-size="2" popover-to="right")
-                v-flex: v-text-field(v-model="p.q"  type="number" label="Cantidad" min="1" box append-icon="view_quilt" @click:append="fillout(index)" hint="Click en el icono para autorellenar" color="red darken-4")                    
-              v-layout(outline v-if="index != 0")
-                v-flex: v-btn(color="red" small v-on:click="deleteGraphic(index)" outline) Eliminar
+                v-flex(xs6): v-text-field(v-model="p.q"  type="number" label="Cantidad" min="1" box  color="red darken-4")  
+                 
+                v-flex(xs3): div.pt-1.text-md-center: swatches(v-model="p.c" swatch-size="20" spacing-size="2" popover-to="right")
+                
+                v-flex(): v-speed-dial(left direction="top" transition="scale-transition" )
+                  v-btn(slot="activator" :color="p.c" dark fab small)
+                    v-icon settings
+                    v-icon close
+                  v-tooltip(top)
+                    span Girar pieza
+                    v-btn(slot="activator" color="#444" dark fab small v-on:click="rotateGraphic(index, p.w, p.h)")
+                      v-icon rotate_90_degrees_ccw
+                  
+                  v-tooltip(top)
+                    span Autorellenar
+                    v-btn(slot="activator" color="#444" dark fab small v-on:click="fillout(index)")
+                      v-icon view_quilt
+                  
+                  v-tooltip(top)
+                    span Combinar iguales
+                    v-btn(slot="activator" color="#444" dark fab small v-on:click="combineGraphics(p, index)")
+                      v-icon unfold_less
+                  
+                  v-tooltip(top v-if="piezas.length-1")
+                    span Eliminar
+                    v-btn(slot="activator" color="red" dark fab small v-on:click="deleteGraphic(index)")
+                      v-icon delete
+                      
+              //v-layout(outline v-if="piezas.length-1")
+                  v-btn(:color="p.c" fab absolute right bottom dark small v-on:click="deleteGraphic(index)" icon): v-icon delete

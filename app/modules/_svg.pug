@@ -28,12 +28,18 @@
       line(:x1="plotterGw" :x2="material.w-plotterGw" :y1="material.h-plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1") //B
       line(:x1="plotterGw" :x2="plotterGw" :y1="plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1") //L
       line(:x1="material.w-plotterGw" :x2="material.w-plotterGw" :y1="plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1") //R
-      
+    
+    // PINZA
+    g(v-if="!material.guiaCorte && material.tipo=='plotter'")
+      rect(:width="material.w" height="1.5" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1")
+      rect(:width="1.5" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1")
+      rect(:width="material.w" height="1.5" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'")
+      rect(:width="1.5" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'")
         
 
     
     //GRAFICO
-    g(v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'" )
+    g(v-for="(g, GIndex) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'" )
       
       template(v-if="material.tipo=='flexible'")
         
@@ -49,15 +55,15 @@
         rect(:width="material.rebases.r" :height="g.h" fill="rgba(10,10,10,0.1)" :transform="'translate('+(g.w-material.rebases.r)+', 0)'" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3")
         
         
-        rect(:width="g.w-material.rebases.l-material.rebases.r" :height="g.h-material.rebases.t-material.rebases.b" fill="rgba(255,255,255,0.1)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.rebases.l+','+material.rebases.t+')'")
+        rect(:width="g.w-material.rebases.l-material.rebases.r" :height="g.h-material.rebases.t-material.rebases.b" :fill="convertHex(g.c)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.rebases.l+','+material.rebases.t+')'" v-on:click="separateGraphic(GIndex, g, page)" ).renderedGraphic
       
 
     
       template(v-if="material.tipo=='rigido'")
-        rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(0,0,0,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3")
-        rect(v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" fill="#fff" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'")
+        rect(v-bind:width="g.w" v-bind:height="g.h" fill="#fff" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3")
+        rect(v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" :fill="convertHex(g.c)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'" v-on:click="separateGraphic(GIndex, g, page)" ).renderedGraphic
       
       
       template(v-if="material.tipo=='plotter'")
-        rect(v-bind:width="g.w" v-bind:height="g.h" fill="rgba(0,0,0,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3")
-        rect(v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" fill="#fff" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'")
+        rect(v-bind:width="g.w" v-bind:height="g.h" fill="#fff" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3")
+        rect(v-bind:width="g.w-(material.medianilPlotter.value*2)" v-bind:height="g.h-(material.medianilPlotter.value*2)" :fill="convertHex(g.c)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianilPlotter.value+','+material.medianilPlotter.value+')'" v-on:click="separateGraphic(GIndex, g, page)" ).renderedGraphic

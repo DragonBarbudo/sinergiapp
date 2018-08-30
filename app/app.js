@@ -1,23 +1,26 @@
+Vue.config.devtools = true;
+
 var app = new Vue({
   el: '#app',
   components: {Swatches: window.VueSwatches.default},
   data: () => ({
     drawer: true,
     dialog: false,
-    changelog: false,
+    changelog: true,
     activePage: 0,
     pageCount : 0,
     temporals : [],
     runningVizualizer: true,
     db: configurations,
     plotterGw: 8,
-    plotterGh: 28,
+    plotterGh: 13,
+    viewgrid: false,
     material: {
       w: 320,
       h: 100,
       w_rendered: 0,
       h_rendered: 0,
-      tipo: 'plotter',
+      tipo: 'flexible',
       rigidoElegido : { id: 0, w:122, h:244 },
       flexibleElegido : {id:0, w: 320, t: 'Lona Front'},
       plotterElegido: { id:0, w: 60 },
@@ -28,17 +31,21 @@ var app = new Vue({
       rebases: { t:0, r:0, b:0, l:0, tb:0, lr:0},
       margen: false,
       medianil: {name: "0 mm", value:0.0},
+      medianilPlotter: {name: "0 mm", value:0.0},
       pinza: true,
       guiaCorte : false
     },
     piezasExpansionPanel : [],
     piezas: [
-      {w:60, h:30, q:4, c:"#C0382B"},
+      {w:Math.floor(Math.random()*40)+10, h:Math.floor(Math.random()*40)+10, q:Math.floor(Math.random()*10)+1, c:configurations.colorsList[Math.floor(Math.random() * configurations.colorsList.length)].c, parent:0},
     ],
     blocks: [],
     paginas : [{}]
   }),
   methods: {
+    changeView: function(){
+      this.viewgrid = !this.viewgrid;
+    },
     downloadPDF : function(){
       this.dialog=true;
       return false;
@@ -51,7 +58,7 @@ var app = new Vue({
       pdf.save('sinergia.pdf');
     },
     addGraphic : function(){
-      this.piezas.push({w:10, h:10, q:1, c:"#000" });
+      this.piezas.push({w:30, h:30, q:1, c:this.db.colorsList[Math.floor(Math.random() * this.db.colorsList.length)].c });
     },
     deleteGraphic : function(index){
       this.piezas.splice(index, 1);
@@ -60,6 +67,30 @@ var app = new Vue({
     rotateGraphic : function(index, w, h){
       this.piezas[index].w = h;
       this.piezas[index].h = w;
+    },
+    separateGraphic : function(index, g, page){
+      //console.log(index);
+      //console.log(g.parent);
+
+      if(this.piezas[g.parent].q>1){
+        this.piezas[g.parent].q-=1;
+        this.piezas.push({w:g.h, h:g.w, q:1, c:this.db.colorsList[Math.floor(Math.random() * this.db.colorsList.length)].c });
+      } else {
+        this.piezas[g.parent].w = g.h;
+        this.piezas[g.parent].h = g.w;
+      }
+    },
+    combineGraphics: function(p, index){
+      var encontradas = [];
+      for(var i=0; i<this.piezas.length; i++){
+        if(this.piezas[i].w==p.w && this.piezas[i].h==p.h && i!=index){
+          this.piezas[index].q+=this.piezas[i].q;
+          encontradas.push(i);
+        }
+      }
+      for(var d = encontradas.length-1; d>=0; d--){
+        this.piezas.splice(encontradas[d], 1);
+      }
     },
     fillout : function(index){
       var currentPages = this.paginas.length;
@@ -89,13 +120,21 @@ var app = new Vue({
 
         if(this.material.guiaCorte){
           this.material.w = 120;
-          this.material.h = 180;
+          this.material.h = 150;
         } else {
           this.material.h = this.material.hPlotter;
           this.material.w = this.material.plotterElegido.w;
         }
       }
-    }
+    },
+    convertHex: function (color) {
+        color = color.replace('#', '');
+        let r = parseInt(color.substring(0, 2), 16);
+        let g = parseInt(color.substring(2, 4), 16);
+        let b = parseInt(color.substring(4, 6), 16);
+        let result = 'rgba(' + r + ',' + g + ',' + b + ',' + .05 + ')';
+        return result;
+      }
   },
   computed : {
    viewboxSize: function(){
@@ -126,6 +165,9 @@ var app = new Vue({
        if(this.material.guiaCorte){
          this.material.w_rendered = this.material.w - 16;
          this.material.h_rendered = this.material.h - 56;
+       } else { //Pinza
+         this.material.w_rendered = this.material.w - 3;
+         this.material.h_rendered = this.material.h - 3;
        }
      }
 
@@ -152,6 +194,11 @@ var app = new Vue({
            extraW = this.material.medianil.value*2;
            extraH = this.material.medianil.value*2
          }
+         //PLOTTER > MEDIANIL
+         if(this.material.tipo=='plotter'){
+           extraW = this.material.medianilPlotter.value*2;
+           extraH = this.material.medianilPlotter.value*2
+         }
          //FLEXIBLE > REBASE
          if(this.material.tipo=='flexible'){
            extraW = (parseFloat(this.material.rebases.l) + parseFloat(this.material.rebases.r));
@@ -160,7 +207,8 @@ var app = new Vue({
          var finalPiece = {
            w: parseFloat(this.piezas[p].w) + parseFloat(extraW),
            h: parseFloat(this.piezas[p].h) + parseFloat(extraH),
-           c: this.piezas[p].c
+           c: this.piezas[p].c,
+           parent: this.piezas[p].parent
          };
          this.blocks.push( finalPiece );
 
@@ -213,6 +261,9 @@ var app = new Vue({
               if(this.material.guiaCorte){
                 gY+=this.plotterGh;
                 gX+=this.plotterGw;
+              } else { //Pinza
+                gY+=1.5;
+                gX+=1.5;
               }
             }
 
@@ -221,7 +272,8 @@ var app = new Vue({
               x: gX,
               w: block.w,
               h: block.h,
-              c: block.c
+              c: block.c,
+              parent: block.parent
             };
 
 
@@ -230,14 +282,14 @@ var app = new Vue({
             this.paginas[pageCount].ocupado+= block.w * block.h;
           }
           else { //DOESNT FITS... new page
-            var theGraphic = { w:block.w, h:block.h, c:block.c };
+            var theGraphic = { w:block.w, h:block.h, c:block.c, parent:block.parent };
             temporals.push(theGraphic);
 
           }
         }
 
 
-        if(temporals.length>0 && this.paginas[pageCount].graphics.length>0 && pageCount<40){
+        if(temporals.length>0 && this.paginas[pageCount].graphics.length>0 && pageCount<200){
           this.blocks = temporals;
           this.paginas[pageCount+1] = { graphics: [], ocupado:0 }
           temporals = [];

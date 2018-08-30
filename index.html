@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="app/app.css">
   </head>
   <body>
-    <div id="app">
+    <div id="app" v-cloak>
       <v-app id="inspire">
         <!--:mini-variant.sync="mini" -->
         <v-navigation-drawer v-model="drawer" fixed clipped app width="420">
@@ -88,7 +88,7 @@
                   <v-text-field value="120" label="Ancho (cm)" box hide-details @input="materialSize" color="red" disabled></v-text-field>
                 </v-flex>
                 <v-flex xs6 v-if="material.guiaCorte">
-                  <v-text-field value="180" label="Alto (cm)" box hide-details @input="materialSize" color="red" disabled></v-text-field>
+                  <v-text-field value="150" label="Alto (cm)" box hide-details @input="materialSize" color="red" disabled></v-text-field>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -97,12 +97,15 @@
             <v-toolbar card>
               <v-toolbar-title>Piezas</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn color="red" dark outline small v-on:click="addGraphic">Agregar</v-btn>
+              <!--v-btn(color="red" dark outline small v-on:click="addGraphic") Agregar-->
+              <v-btn color="red" fab absolute right dark small v-on:click="addGraphic" icon>
+                <v-icon>add </v-icon>
+              </v-btn>
             </v-toolbar>
             <v-card-text>
               <v-expansion-panel popout v-model="piezasExpansionPanel" expand>
                 <v-expansion-panel-content v-for="(p, index) in piezas" :key="index" ripple>
-                  <div slot="header"><i class="v-icon material-icons" :style="'font-size: 16px; color:'+p.c">photo_size_select_actual</i><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong></div>
+                  <div slot="header"><i class="v-icon material-icons" :style="'font-size: 16px; color:'+p.c">photo_size_select_actual</i><strong> {{p.w}}x{{p.h}} cms [{{p.q}} piezas]</strong><span style="display:none;">{{p.parent = index}}</span></div>
                   <v-card>
                     <v-container grid-list-xs fluid>
                       <v-layout>
@@ -110,7 +113,7 @@
                           <v-text-field v-model="p.w" box type="number" label="Ancho (cm)" min="1" color="red"></v-text-field>
                         </v-flex>
                         <v-flex>
-                          <v-tooltip top><span>Invertir</span>
+                          <v-tooltip top><span>Girar pieza</span>
                             <v-btn slot="activator" icon color="red" flat v-on:click="rotateGraphic(index, p.w, p.h)">
                               <v-icon>rotate_90_degrees_ccw</v-icon>
                             </v-btn>
@@ -121,20 +124,45 @@
                         </v-flex>
                       </v-layout>
                       <v-layout>
-                        <v-flex>
+                        <v-flex xs6>
+                          <v-text-field v-model="p.q" type="number" label="Cantidad" min="1" box color="red darken-4"> </v-text-field>
+                        </v-flex>
+                        <v-flex xs3>
                           <div class="pt-1 text-md-center">
                             <swatches v-model="p.c" swatch-size="20" spacing-size="2" popover-to="right"></swatches>
                           </div>
                         </v-flex>
                         <v-flex>
-                          <v-text-field v-model="p.q" type="number" label="Cantidad" min="1" box append-icon="view_quilt" @click:append="fillout(index)" hint="Click en el icono para autorellenar" color="red darken-4">                   </v-text-field>
+                          <v-speed-dial left direction="top" transition="scale-transition">
+                            <v-btn slot="activator" :color="p.c" dark fab small>
+                              <v-icon>settings</v-icon>
+                              <v-icon>close</v-icon>
+                            </v-btn>
+                            <v-tooltip top><span>Girar pieza</span>
+                              <v-btn slot="activator" color="#444" dark fab small v-on:click="rotateGraphic(index, p.w, p.h)">
+                                <v-icon>rotate_90_degrees_ccw</v-icon>
+                              </v-btn>
+                            </v-tooltip>
+                            <v-tooltip top><span>Autorellenar</span>
+                              <v-btn slot="activator" color="#444" dark fab small v-on:click="fillout(index)">
+                                <v-icon>view_quilt</v-icon>
+                              </v-btn>
+                            </v-tooltip>
+                            <v-tooltip top><span>Combinar iguales</span>
+                              <v-btn slot="activator" color="#444" dark fab small v-on:click="combineGraphics(p, index)">
+                                <v-icon>unfold_less</v-icon>
+                              </v-btn>
+                            </v-tooltip>
+                            <v-tooltip top v-if="piezas.length-1"><span>Eliminar</span>
+                              <v-btn slot="activator" color="red" dark fab small v-on:click="deleteGraphic(index)">
+                                <v-icon>delete</v-icon>
+                              </v-btn>
+                            </v-tooltip>
+                          </v-speed-dial>
                         </v-flex>
                       </v-layout>
-                      <v-layout outline v-if="index != 0">
-                        <v-flex>
-                          <v-btn color="red" small v-on:click="deleteGraphic(index)" outline>Eliminar</v-btn>
-                        </v-flex>
-                      </v-layout>
+                      <!--v-layout(outline v-if="piezas.length-1")v-btn(:color="p.c" fab absolute right bottom dark small v-on:click="deleteGraphic(index)" icon): v-icon delete
+                      -->
                     </v-container>
                   </v-card>
                 </v-expansion-panel-content>
@@ -147,7 +175,13 @@
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text v-if="material.tipo == 'plotter'">
-              <v-checkbox :label="'Guía Pre Corte'" v-model="material.guiaCorte" color="red" @change="materialSize"></v-checkbox>
+              <v-tooltip top><span>La pinza de 1.5 cm es obligatoria en Plotter</span>
+                <v-checkbox :label="'Pinza'" slot="activator" v-model="material.pinza" color="red" disabled></v-checkbox>
+              </v-tooltip>
+              <v-checkbox :label="'Impresión con pre-corte'" v-model="material.guiaCorte" color="red" @change="materialSize"></v-checkbox>
+              <v-radio-group label="Medianil: " v-model="material.medianilPlotter" mandatory row>
+                <v-radio v-for="m in db.medianiles" :label="m.name" :value="m" color="red" :key="m.name"></v-radio>
+              </v-radio-group>
             </v-card-text>
             <v-card-text v-if="material.tipo == 'rigido'">
               <v-checkbox :label="'Margen para corte'" v-model="material.margen" color="red"></v-checkbox>
@@ -228,9 +262,20 @@
           </v-toolbar-side-icon>
           <v-toolbar-title>Sinergia Publicitaria</v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-tooltip bottom><span>Cambiar vista</span>
+            <v-btn v-on:click="changeView" slot="activator" icon>
+              <v-icon v-if="!viewgrid">view_module</v-icon>
+              <v-icon v-if="viewgrid">view_carousel</v-icon>
+            </v-btn>
+          </v-tooltip>
           <v-tooltip bottom><span>Descargar como PDF</span>
             <v-btn v-on:click="downloadPDF" slot="activator" icon>
               <v-icon>picture_as_pdf</v-icon>
+            </v-btn>
+          </v-tooltip>
+          <v-tooltip bottom><span>Información</span>
+            <v-btn v-on:click="changelog=true" slot="activator" icon>
+              <v-icon>info</v-icon>
             </v-btn>
           </v-tooltip>
         </v-toolbar>
@@ -239,18 +284,8 @@
             <v-card class="blue-grey lighten-3">
               <v-card-text>
                 <div id="visualizer">{{visualizer}}</div>
-                <v-container fluid>
-                  <v class="layout" row wrap>
-                    <v-flex>
-                      <v-spacer></v-spacer>
-                    </v-flex>
-                    <v-flex class="text-lg-right">
-                      <v-switch label="Vista" prepend-icon="view_module" v-model="viewgrid" color="red"></v-switch>
-                    </v-flex>
-                  </v>
-                </v-container>
-                <v-tabs dark slider-color="white" color="red darken-4" show-arrows v-model="activePage">
-                  <v-tab v-for="(page, index) in paginas" :key="index" ripple>Hoja {{index+1}}</v-tab>
+                <v-tabs dark slider-color="white" color="red darken-4" show-arrows v-model="activePage" v-bind:class="{ asGRID: viewgrid }">
+                  <v-tab v-for="(page, index) in paginas" :key="index" ripple>P.{{index+1}}</v-tab>
                   <v-tab-item v-for="(page, index) in paginas" :key="index">
                     <div class="svg-container">
                       <div class="mat_w caption">{{material.w}} cm</div>
@@ -282,8 +317,15 @@
                           <line :x1="plotterGw" :x2="plotterGw" :y1="plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1">//L</line>
                           <line :x1="material.w-plotterGw" :x2="material.w-plotterGw" :y1="plotterGh" :y2="material.h-plotterGh" stroke-width=".2" stroke="#6E7376" stroke-dasharray="1,1">//R</line>
                         </g>
+                        <!-- PINZA-->
+                        <g v-if="!material.guiaCorte &amp;&amp; material.tipo=='plotter'">
+                          <rect :width="material.w" height="1.5" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1"></rect>
+                          <rect :width="1.5" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1"></rect>
+                          <rect :width="material.w" height="1.5" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate(0,'+(material.h-1)+')'"></rect>
+                          <rect :width="1.5" :height="material.h" stroke-width=".2" stroke="#6E7376" fill="#d2dfe7" stroke-dasharray="1,1" :transform="'translate('+(material.w-1)+',0)'"></rect>
+                        </g>
                         <!--GRAFICO-->
-                        <g v-for="(g, index) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'">
+                        <g v-for="(g, GIndex) in page.graphics" v-bind:transform="'translate('+g.x+','+g.y+')'">
                           <template v-if="material.tipo=='flexible'">
                             <!--Rebases-->
                             <!--T-->
@@ -294,15 +336,15 @@
                             <rect :width="material.rebases.l" :height="g.h" fill="rgba(10,10,10,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
                             <!--R-->
                             <rect :width="material.rebases.r" :height="g.h" fill="rgba(10,10,10,0.1)" :transform="'translate('+(g.w-material.rebases.r)+', 0)'" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
-                            <rect :width="g.w-material.rebases.l-material.rebases.r" :height="g.h-material.rebases.t-material.rebases.b" fill="rgba(255,255,255,0.1)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.rebases.l+','+material.rebases.t+')'"></rect>
+                            <rect class="renderedGraphic" :width="g.w-material.rebases.l-material.rebases.r" :height="g.h-material.rebases.t-material.rebases.b" :fill="convertHex(g.c)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.rebases.l+','+material.rebases.t+')'" v-on:click="separateGraphic(GIndex, g, page)"></rect>
                           </template>
                           <template v-if="material.tipo=='rigido'">
-                            <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(0,0,0,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
-                            <rect v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" fill="#fff" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'"></rect>
+                            <rect v-bind:width="g.w" v-bind:height="g.h" fill="#fff" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
+                            <rect class="renderedGraphic" v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" :fill="convertHex(g.c)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'" v-on:click="separateGraphic(GIndex, g, page)"></rect>
                           </template>
                           <template v-if="material.tipo=='plotter'">
-                            <rect v-bind:width="g.w" v-bind:height="g.h" fill="rgba(0,0,0,0.1)" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
-                            <rect v-bind:width="g.w-(material.medianil.value*2)" v-bind:height="g.h-(material.medianil.value*2)" fill="#fff" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianil.value+','+material.medianil.value+')'"></rect>
+                            <rect v-bind:width="g.w" v-bind:height="g.h" fill="#fff" stroke-width=".1" stroke="#6E7376" stroke-dasharray="3,3"></rect>
+                            <rect class="renderedGraphic" v-bind:width="g.w-(material.medianilPlotter.value*2)" v-bind:height="g.h-(material.medianilPlotter.value*2)" :fill="convertHex(g.c)" stroke-width=".3" v-bind:stroke="g.c" :transform="'translate('+material.medianilPlotter.value+','+material.medianilPlotter.value+')'" v-on:click="separateGraphic(GIndex, g, page)"></rect>
                           </template>
                         </g>
                       </svg>
@@ -317,52 +359,185 @@
             </v-card>
           </v-container>
         </v-content>
-        <v-footer class="red darken-4 pa-3" dark dense tile app>
-          <div>Última modificación: 2018-8-23 09:29:20</div>
+        <v-footer class="red darken-4 pa-3" dark dense tile>
+          <div>Última modificación: 2018-8-30 13:37:52</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>
-        <v-dialog v-model="changelog" max-width="400">
+        <v-dialog v-model="changelog" max-width="800">
           <v-card>
-            <v-card-title primary-title>
-              <h3>Pendientes</h3>
-            </v-card-title>
-            <v-card-text>
-              <ul>
-                <li>Falta información para Plotter</li>
-                <li>Botón de descarga.</li>
-                <li>Preloader en muchas piezas.</li>
-              </ul>
-            </v-card-text>
-            <v-card-title primary-title>
-              <h3>Changelog</h3>
-            </v-card-title>
-            <v-card-text>
-              <ul>
-                <li>Iconos modificados</li>
-                <li>Corrección en rebase y medianil. Antes restaba, ahora aumenta.</li>
-                <li>Mejora en algoritmo de acomodo.</li>
-              </ul>
-              <v-divider></v-divider>
-              <ul>
-                <li>Flexible: Modificación de UI en rebase.</li>
-                <li>Flexible: Rebase perimetral corregido. Por pieza.</li>
-                <li>Flexible: Pinza añadida.</li>
-                <li>Tabs: Al modificar muestra la primer hoja.</li>
-                <li>Piezas: Boton para rotar/invertir.</li>
-                <li>Piezas: Modificación UI de cantidad.</li>
-                <li>Flexibles: El Visualizador se escala para limitar el alto de la página.</li>
-                <li>Flexibles y Rigidos: Almacena la última medida ingresada al cambiar tipo de material.</li>
-                <li>General: Configuración en slide izquierdo.</li>
-                <li>Rigidos: Cambio de UI en tamaños</li>
-                <li>Flexibles: Altura Min 5, Max 10'000.</li>
-                <li>Flexibles: Anchos fijos.</li>
-                <li>General: Se pueden añadir hasta <strong>40 hojas</strong>.</li>
-                <li>Responsivo (sin testear en moviles).</li>
-                <li>Refactorización 1. </li>
-              </ul>
-            </v-card-text>
+            <v-toolbar dark>
+              <v-toolbar-side-icon>
+                <v-icon>info</v-icon>
+              </v-toolbar-side-icon>
+              <v-toolbar-title>Información</v-toolbar-title>
+            </v-toolbar>
+            <v-layout>
+              <v-flex>
+                <v-list three-line>
+                  <v-subheader>Sinergia App</v-subheader>
+                  <v-divider></v-divider>
+                  <v-list-tile>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Elegir tipo de impresión</v-list-tile-title>
+                      <v-list-tile-sub-title>Flexible, Rígido o Plotter.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Añadir piezas</v-list-tile-title>
+                      <v-list-tile-sub-title>Agregar tipos de piezas diferentes y ajustar el ancho, alto, cantidad y color que las representará.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Seleccionar Acabados</v-list-tile-title>
+                      <v-list-tile-sub-title>Elegir los acabados según el tipo de impresión elegida. (Rebase perimetral, Medianil, Impresión con pre-corte).</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Acomodo individual de piezas</v-list-tile-title>
+                      <v-list-tile-sub-title>Al dar click sobre las piezas en el visualizador se creará un nuevo módulo con las características de la misma pieza. También la rotará.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-flex>
+              <v-flex>
+                <v-list two-line>
+                  <v-subheader>Barra superior</v-subheader>
+                  <v-divider></v-divider>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-icon>menu</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Menú</v-list-tile-title>
+                      <v-list-tile-sub-title>Abre y cierra la barra lateral.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-icon>picture_as_pdf</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Generar PDF</v-list-tile-title>
+                      <v-list-tile-sub-title>Crea un PDF del visualizador.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-icon>view_module</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Cambiar vista</v-list-tile-title>
+                      <v-list-tile-sub-title>Cambia la vista del visualizador.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-subheader>Configurar documento</v-subheader>
+                  <v-divider></v-divider>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-btn fab small>
+                        <v-icon>add</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Agregar piezas</v-list-tile-title>
+                      <v-list-tile-sub-title>Crea una nueva pieza.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-btn fab small>
+                        <v-icon>settings</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Opciones</v-list-tile-title>
+                      <v-list-tile-sub-title>Despliega un menú de acciones para la pieza.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-btn fab small>
+                        <v-icon>rotate_90_degrees_ccw</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Girar pieza</v-list-tile-title>
+                      <v-list-tile-sub-title>Invierte la altura por el ancho.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-btn fab small>
+                        <v-icon>view_quilt</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Autorellenar</v-list-tile-title>
+                      <v-list-tile-sub-title>Duplica la pieza hasta llenar la página.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-btn fab small>
+                        <v-icon>unfold_less</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Combinar iguales</v-list-tile-title>
+                      <v-list-tile-sub-title>Si hay piezas iguales (mismo ancho y altura) las combina.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                  <v-list-tile>
+                    <v-list-tile-action>
+                      <v-btn fab small>
+                        <v-icon>delete</v-icon>
+                      </v-btn>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                      <v-list-tile-title>Eliminar</v-list-tile-title>
+                      <v-list-tile-sub-title>Elimina las piezas. Si queda 1 el botón se oculta.</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                  </v-list-tile>
+                </v-list>
+              </v-flex>
+            </v-layout>
           </v-card>
+          <!--v-card
+          v-card-title(primary-title): h3 Pendientes
+          v-card-text
+            ul
+              li Botón de descarga.
+              li Preloader en muchas piezas.
+              
+          v-card-title(primary-title): h3 Changelog
+          v-card-text
+            ul
+              li Iconos modificados
+              li Corrección en rebase y medianil. Antes restaba, ahora aumenta.
+              li Mejora en algoritmo de acomodo.
+            v-divider
+            ul
+              li Flexible: Modificación de UI en rebase.
+              li Flexible: Rebase perimetral corregido. Por pieza.
+              li Flexible: Pinza añadida.
+              li Tabs: Al modificar muestra la primer hoja.
+              li Piezas: Boton para rotar/invertir.
+              li Piezas: Modificación UI de cantidad.
+              li Flexibles: El Visualizador se escala para limitar el alto de la página.
+              li Flexibles y Rigidos: Almacena la última medida ingresada al cambiar tipo de material.
+              li General: Configuración en slide izquierdo.
+              li Rigidos: Cambio de UI en tamaños
+              li Flexibles: Altura Min 5, Max 10'000.
+              li Flexibles: Anchos fijos.
+              li General: Se pueden añadir hasta <strong>40 hojas</strong>.
+              li Responsivo (sin testear en moviles).
+              li Refactorización 1. 
+              
+          -->
         </v-dialog>
         <v-dialog v-model="dialog">
           <v-card>

@@ -1,10 +1,107 @@
-v-dialog(v-model="changelog" max-width="400")
+v-dialog(v-model="changelog" max-width="800")
+  
   v-card
+    v-toolbar(dark)
+      v-toolbar-side-icon
+        v-icon info
+      v-toolbar-title Información
+    v-layout
+      
+      v-flex: v-list(three-line)
+        v-subheader Sinergia App
+        v-divider
+        
+        v-list-tile()
+          v-list-tile-content
+            v-list-tile-title Elegir tipo de impresión
+            v-list-tile-sub-title Flexible, Rígido o Plotter.
+        
+        v-list-tile()
+          v-list-tile-content
+            v-list-tile-title Añadir piezas
+            v-list-tile-sub-title Agregar tipos de piezas diferentes y ajustar el ancho, alto, cantidad y color que las representará.
+        
+        v-list-tile()
+          v-list-tile-content
+            v-list-tile-title Seleccionar Acabados
+            v-list-tile-sub-title Elegir los acabados según el tipo de impresión elegida. (Rebase perimetral, Medianil, Impresión con pre-corte).
+        
+        v-list-tile()
+          v-list-tile-content
+            v-list-tile-title Acomodo individual de piezas
+            v-list-tile-sub-title Al dar click sobre las piezas en el visualizador se creará un nuevo módulo con las características de la misma pieza. También la rotará.
+      
+      
+      
+      v-flex: v-list(two-line)
+        v-subheader Barra superior
+        v-divider
+        
+        v-list-tile()
+          v-list-tile-action: v-icon menu
+          v-list-tile-content
+            v-list-tile-title Menú
+            v-list-tile-sub-title Abre y cierra la barra lateral.
+        
+        v-list-tile()
+          v-list-tile-action: v-icon picture_as_pdf
+          v-list-tile-content
+            v-list-tile-title Generar PDF
+            v-list-tile-sub-title Crea un PDF del visualizador.
+        
+        v-list-tile()
+          v-list-tile-action: v-icon view_module
+          v-list-tile-content
+            v-list-tile-title Cambiar vista
+            v-list-tile-sub-title Cambia la vista del visualizador.
+        
+        v-subheader Configurar documento
+        v-divider
+        
+        v-list-tile()
+          v-list-tile-action: v-btn(fab small): v-icon add
+          v-list-tile-content
+            v-list-tile-title Agregar piezas
+            v-list-tile-sub-title Crea una nueva pieza.
+        
+        v-list-tile()
+          v-list-tile-action: v-btn(fab small): v-icon settings
+          v-list-tile-content
+            v-list-tile-title Opciones
+            v-list-tile-sub-title Despliega un menú de acciones para la pieza.
+        
+        v-list-tile()
+          v-list-tile-action: v-btn(fab small): v-icon rotate_90_degrees_ccw
+          v-list-tile-content
+            v-list-tile-title Girar pieza
+            v-list-tile-sub-title Invierte la altura por el ancho.
+        
+        v-list-tile()
+          v-list-tile-action: v-btn(fab small): v-icon view_quilt
+          v-list-tile-content
+            v-list-tile-title Autorellenar
+            v-list-tile-sub-title Duplica la pieza hasta llenar la página.
+        
+        v-list-tile()
+          v-list-tile-action: v-btn(fab small): v-icon unfold_less
+          v-list-tile-content
+            v-list-tile-title Combinar iguales
+            v-list-tile-sub-title Si hay piezas iguales (mismo ancho y altura) las combina.
+        
+        v-list-tile()
+          v-list-tile-action: v-btn(fab small): v-icon delete
+          v-list-tile-content
+            v-list-tile-title Eliminar
+            v-list-tile-sub-title Elimina las piezas. Si queda 1 el botón se oculta.
+            
+            
+            
+  
+  //v-card
     
     v-card-title(primary-title): h3 Pendientes
     v-card-text
       ul
-        li Falta información para Plotter
         li Botón de descarga.
         li Preloader en muchas piezas.
         
