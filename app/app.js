@@ -6,7 +6,7 @@ var app = new Vue({
   data: () => ({
     drawer: true,
     dialog: false,
-    changelog: true,
+    changelog: false,
     activePage: 0,
     pageCount : 0,
     temporals : [],
@@ -20,10 +20,11 @@ var app = new Vue({
       h: 100,
       w_rendered: 0,
       h_rendered: 0,
-      tipo: 'flexible',
+      tipo: 'plotter',
       rigidoElegido : { id: 0, w:122, h:244 },
       flexibleElegido : {id:0, w: 320, t: 'Lona Front'},
       plotterElegido: { id:0, w: 60 },
+      plotterElegidoPre: { id: 0, w: 150, h: 120 },
       hFlexible: 100,
       hPlotter : 100,
       rebase: false,
@@ -48,13 +49,17 @@ var app = new Vue({
     },
     downloadPDF : function(){
       this.dialog=true;
-      return false;
-      var pdf = new jsPDF('l', 'cm', [this.material.w, this.material.h]);
-      svg2pdf(document.getElementById('svg'), pdf, {
-        xOffset: 0,
-        yOffset: 0,
-        scale: 1
-      });
+      console.log(this.material.w + ' - ' + this.material.h);
+      var pdf = new jsPDF('l', 'cm', [this.material.h, this.material.w]);
+      var renderedObjs = document.getElementsByClassName('rendered');
+      for(var i=0; i<renderedObjs.length-1; i++){
+        svg2pdf(renderedObjs[i], pdf, {
+          xOffset: 0,
+          yOffset: 0,
+          scale: 1
+        });
+        pdf.addPage();
+      }
       pdf.save('sinergia.pdf');
     },
     addGraphic : function(){
@@ -119,8 +124,10 @@ var app = new Vue({
       if(this.material.tipo=='plotter'){
 
         if(this.material.guiaCorte){
-          this.material.w = 120;
-          this.material.h = 150;
+
+          this.material.w = this.material.plotterElegidoPre.w;
+          this.material.h = this.material.plotterElegidoPre.h;
+
         } else {
           this.material.h = this.material.hPlotter;
           this.material.w = this.material.plotterElegido.w;

@@ -7,7 +7,7 @@
 		"uuidString": "F8E38A5E-C32B-41E8-82D4-6F943636B1A5"
 		}
 	],
-"creatorBuild": "26261",
+"creatorBuild": "26667",
 "files": {
 	"\/.gitattributes": {
 		"cB": 0,
@@ -268,6 +268,13 @@
 		"oA": 0,
 		"oAP": "\/CNAME",
 		"oF": 0
+		},
+	"\/index.html": {
+		"cB": 0,
+		"ft": 8192,
+		"oA": 0,
+		"oAP": "\/index.html",
+		"oF": 0
 		}
 	},
 "hooks": [
@@ -278,7 +285,8 @@
 	"creationDate": 552423872,
 	"displayValue": "sinergiapp",
 	"displayValueWasSetByUser": 0,
-	"iconImageName": "meme-soon"
+	"iconImageName": "meme-soon",
+	"iconImageWasSetByUser": 0
 	},
 "projectSettings": {
 	"abortBuildOnError": 1,
@@ -286,6 +294,7 @@
 	"animateCSSInjections": 1,
 	"autoBuildNewItems": 1,
 	"autoprefixerBrowserString": "> 1%, last 2 versions, Firefox ESR, Opera 12.1",
+	"autoprefixerEnableIEGrid": 0,
 	"babelAuxiliaryCommentAfter": "",
 	"babelAuxiliaryCommentBefore": "",
 	"babelConfigFileHandlingType": 0,
@@ -2080,6 +2089,7 @@
 		"autoOutputPathReplace1": "",
 		"autoOutputPathReplace2": "",
 		"autoOutputPathStyle": 0,
+		"outputFormat": 0,
 		"quality": 100
 		},
 	"languageDefaultsJS": {

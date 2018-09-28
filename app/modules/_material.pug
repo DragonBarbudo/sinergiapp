@@ -36,24 +36,29 @@ v-card.mb-2
     //RIGIDO
   
     v-layout(v-if="material.tipo == 'rigido'" align-center justify-center).mb-2
-      
       v-select(:items="db.rigidos" v-model="material.rigidoElegido" box label="Ancho x Alto (cm)" item-text="`${data.item.w}, ${data.item.h}`" color="red" @change="materialSize")
         template(slot="selection" slot-scope="data") {{ data.item.w}} x {{data.item.h}} cm
         template(slot="item" slot-scope="data")
           v-list-tile-content
             v-list-tile-title(v-html="`${data.item.w} x ${data.item.h} cm`")
     
+    //PLOTTER
     v-layout(v-if="material.tipo == 'plotter'")
+    
       v-flex(xs6 v-if="!material.guiaCorte")
         v-select(:items="db.plotters" v-model="material.plotterElegido" box label="Ancho (cm)" item-text="`${data.item.w}`" color="red" @change="materialSize")
           template(slot="selection" slot-scope="data") {{data.item.w}} cm
           template(slot="item" slot-scope="data")
             v-list-tile-content
               v-list-tile-title(v-html="`${data.item.w} cm`")
-      v-flex(xs6 v-if="!material.guiaCorte")
-        v-text-field(v-model="material.hPlotter" label="Alto (cm)" min="100" max="3000" required type="number" box hide-details @input="materialSize" color="red")
       
-      v-flex(xs6 v-if="material.guiaCorte")
-        v-text-field(value="120" label="Ancho (cm)" box hide-details @input="materialSize" color="red" disabled)
-      v-flex(xs6 v-if="material.guiaCorte")
-        v-text-field(value="150" label="Alto (cm)"  box hide-details @input="materialSize" color="red" disabled)
+      v-flex(xs6 v-if="!material.guiaCorte")
+        v-text-field(v-model="material.hPlotter" label="Alto (cm)" min="100" max="1000" required type="number" box hide-details @input="materialSize" color="red")
+          
+          
+
+      v-select(:items="db.plottersPre" v-if="material.guiaCorte" v-model="material.plotterElegidoPre" box label="Ancho x Alto (cm)" item-text="`${data.item.w}, ${data.item.h}`" color="red" @change="materialSize")
+        template(slot="selection" slot-scope="data") {{ data.item.w}} x {{data.item.h}} cm
+        template(slot="item" slot-scope="data")
+          v-list-tile-content
+            v-list-tile-title(v-html="`${data.item.w} x ${data.item.h} cm`")

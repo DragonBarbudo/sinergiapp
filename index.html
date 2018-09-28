@@ -70,6 +70,7 @@
                   </template>
                 </v-select>
               </v-layout>
+              <!--PLOTTER-->
               <v-layout v-if="material.tipo == 'plotter'">
                 <v-flex xs6 v-if="!material.guiaCorte">
                   <v-select :items="db.plotters" v-model="material.plotterElegido" box label="Ancho (cm)" item-text="`${data.item.w}`" color="red" @change="materialSize">
@@ -82,14 +83,16 @@
                   </v-select>
                 </v-flex>
                 <v-flex xs6 v-if="!material.guiaCorte">
-                  <v-text-field v-model="material.hPlotter" label="Alto (cm)" min="100" max="3000" required type="number" box hide-details @input="materialSize" color="red"></v-text-field>
+                  <v-text-field v-model="material.hPlotter" label="Alto (cm)" min="100" max="1000" required type="number" box hide-details @input="materialSize" color="red"></v-text-field>
                 </v-flex>
-                <v-flex xs6 v-if="material.guiaCorte">
-                  <v-text-field value="120" label="Ancho (cm)" box hide-details @input="materialSize" color="red" disabled></v-text-field>
-                </v-flex>
-                <v-flex xs6 v-if="material.guiaCorte">
-                  <v-text-field value="150" label="Alto (cm)" box hide-details @input="materialSize" color="red" disabled></v-text-field>
-                </v-flex>
+                <v-select :items="db.plottersPre" v-if="material.guiaCorte" v-model="material.plotterElegidoPre" box label="Ancho x Alto (cm)" item-text="`${data.item.w}, ${data.item.h}`" color="red" @change="materialSize">
+                  <template slot="selection" slot-scope="data">{{ data.item.w}} x {{data.item.h}} cm</template>
+                  <template slot="item" slot-scope="data">
+                    <v-list-tile-content>
+                      <v-list-tile-title v-html="`${data.item.w} x ${data.item.h} cm`"></v-list-tile-title>
+                    </v-list-tile-content>
+                  </template>
+                </v-select>
               </v-layout>
             </v-container>
           </v-card>
@@ -360,7 +363,7 @@
           </v-container>
         </v-content>
         <v-footer class="red darken-4 pa-3" dark dense tile>
-          <div>Última modificación: 2018-8-30 13:37:52</div>
+          <div>Última modificación: 2018-9-28 05:48:18</div>
           <v-spacer></v-spacer>
           <div>Sinergia Publicitaria. {{ new Date().getFullYear() }}.</div>
         </v-footer>

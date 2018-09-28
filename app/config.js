@@ -27,9 +27,13 @@ var configurations = {
     {id:9, w: 137, t: 'Vinil estático'},
     {id:10, w: 150, t: 'Vinil estático'},
   ],
-  plotters: [
-    { id: 0, w: 60 },
-    { id: 0, w: 120 }
+  plotters:[
+    { id:0, w: 60 },
+    { id:1, w: 120 },
+  ],
+  plottersPre: [
+    { id: 0, w: 150, h: 120 },
+    { id: 1, w: 137, h: 120 }
   ],
   colorsList: [
     {c: '#2CBB9C'},
