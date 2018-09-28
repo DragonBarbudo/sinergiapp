@@ -49,18 +49,23 @@ var app = new Vue({
     },
     downloadPDF : function(){
       this.dialog=true;
-      console.log(this.material.w + ' - ' + this.material.h);
-      var pdf = new jsPDF('l', 'cm', [this.material.h, this.material.w]);
+      var orientation = 'p';
+      if(this.material.w > this.material.h){orientation='l'; }
+      var pdf = new jsPDF(orientation, 'cm', [this.material.w, this.material.h]);
       var renderedObjs = document.getElementsByClassName('rendered');
-      for(var i=0; i<renderedObjs.length-1; i++){
+      console.log('Paginas:'+renderedObjs.length);
+      for(var i=0; i<renderedObjs.length; i++){
+        if(i>0) { pdf.addPage(); }
         svg2pdf(renderedObjs[i], pdf, {
-          xOffset: 0,
-          yOffset: 0,
-          scale: 1
+          xOffset: 0, yOffset: 0, scale: 1
         });
-        pdf.addPage();
+
+        if(i==renderedObjs.length-1){
+          console.log('terminado');
+          pdf.save('sinergia.pdf');
+        }
       }
-      pdf.save('sinergia.pdf');
+
     },
     addGraphic : function(){
       this.piezas.push({w:30, h:30, q:1, c:this.db.colorsList[Math.floor(Math.random() * this.db.colorsList.length)].c });
